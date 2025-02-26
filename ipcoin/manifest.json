@@ -1,0 +1,10 @@
+{
+  "short_name": "Upbit",
+  "name": "Upbit",
+  "start_url": "/home",
+  "permissions": [
+    "gcm"
+  ],
+  "gcm_sender_id": "482941778795",
+  "gcm_sender_id_comment": "Do not change the GCM Sender ID"
+}
