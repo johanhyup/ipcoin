@@ -7,13 +7,86 @@
     <link rel="stylesheet" href="/assets/css/style.css">
     <script type="module" src="/path/to/pagination.js"></script>
     <style>
-        table { width: 100%; border-collapse: collapse; }
-        th, td { border: 1px solid #ddd; padding: 8px; text-align: center; }
-        th { background-color: #f2f2f2; }
-        .pagination { margin-top: 10px; text-align: center; }
-        .pagination button { padding: 5px 10px; margin: 2px; }
-        .search-bar { margin: 10px 0; display: flex; justify-content: space-between; }
-        .input-box { padding: 5px; font-size: 14px; }
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7f9;
+        }
+        .search-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .search-bar div {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .input-box {
+            padding: 8px;
+            font-size: 14px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .button {
+            padding: 8px 12px;
+            font-size: 14px;
+            border: none;
+            border-radius: 4px;
+            background-color: #4CAF50;
+            color: #fff;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .button:hover {
+            background-color: #45a049;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: #fff;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        thead {
+            background-color: #4CAF50;
+            color: #fff;
+        }
+        th, td {
+            padding: 12px 15px;
+            text-align: center;
+            border: none;
+        }
+        tbody tr {
+            border-bottom: 1px solid #ddd;
+        }
+        tbody tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        tbody tr:hover {
+            background-color: #f1f1f1;
+        }
+        .pagination {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+        .pagination button {
+            padding: 8px 12px;
+            border: none;
+            background-color: #4CAF50;
+            color: #fff;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .pagination button:hover {
+            background-color: #45a049;
+        }
     </style>
 </head>
 <body>
@@ -25,7 +98,7 @@
         <div>
             <label for="search-input">아이디/닉네임 검색:</label>
             <input type="text" id="search-input" class="input-box" placeholder="검색어 입력">
-            <button id="search-button">검색</button>
+            <button id="search-button" class="button">검색</button>
         </div>
     </div>
 
@@ -52,7 +125,7 @@
     <script type="module">
         import Pagination from '/path/to/pagination.js';
 
-        // Fetch data from PHP
+        // Fetch 데이터 가져오기
         fetch('/path/to/data_fetch.php')
             .then(response => response.json())
             .then(data => {
@@ -73,7 +146,7 @@
                     </tr>
                 `).join('');
 
-                // Initialize pagination
+                // 페이지네이션 초기화
                 new Pagination('user-table', 'rows-per-page', 'search-input', 'search-button', 'pagination-container');
             });
     </script>

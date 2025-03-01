@@ -31,8 +31,6 @@ if (!isset($_SESSION['master_id']) || !isset($_SESSION['master_name'])) {
 
 // 필요한 config.php 등을 불러오기
 require_once dirname(__DIR__) . '/../config.php';
-
-// AdminLTE 공통 리소스 불러오기
 ?>
 <!DOCTYPE html>
 <html lang="ko">
@@ -40,17 +38,75 @@ require_once dirname(__DIR__) . '/../config.php';
   <meta charset="utf-8"/>
   <title>관리자 페이지 | Raycoin Wallet</title>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <!-- 커스텀 디자인: AdminLTE 기본 요소에서 통일감 있는 디자인으로 오버라이드 -->
   <!-- Font Awesome -->
   <link rel="stylesheet" href="/master/AdminLte/plugins/fontawesome-free/css/all.min.css">
-  <!-- Ionicons -->
-  <!-- (필요하다면) <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css"> -->
-  <!-- AdminLTE css -->
+  <!-- AdminLTE css (기능 유지) -->
   <link rel="stylesheet" href="/master/AdminLte/dist/css/adminlte.min.css">
-  <!-- Google Font (옵션) -->
-  <!-- <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700"> -->
-  
   <!-- 커스텀 CSS -->
   <link rel="stylesheet" href="/master/assets/css/main.css">
+  <style>
+    /* 공통 글로벌 스타일 */
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f4f7f9;
+    }
+    /* 상단 Navbar 스타일 */
+    .main-header.navbar {
+      background-color: #fff;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      border-bottom: 1px solid #e0e0e0;
+      padding: 10px 20px;
+    }
+    .navbar .nav-link {
+      color: #333;
+      transition: color 0.3s;
+    }
+    .navbar .nav-link:hover {
+      color: #4CAF50;
+    }
+    /* 브랜드 로고 스타일 */
+    .brand-link {
+      display: flex;
+      align-items: center;
+      font-size: 20px;
+      font-weight: bold;
+      color: #4CAF50;
+      text-decoration: none;
+      padding: 0 15px;
+    }
+    .brand-link:hover {
+      color: #388e3c;
+    }
+    /* 사이드바 스타일 */
+    .main-sidebar {
+      background-color: #fff;
+      box-shadow: 2px 0 8px rgba(0,0,0,0.1);
+      border-right: 1px solid #e0e0e0;
+    }
+    .sidebar .user-panel .info span {
+      color: #333;
+    }
+    .nav-sidebar a.nav-link {
+      color: #333;
+    }
+    .nav-sidebar a.nav-link.active, 
+    .nav-sidebar a.nav-link:hover {
+      background-color: #4CAF50;
+      color: #fff;
+    }
+    /* 콘텐츠 영역 */
+    .content-wrapper {
+      background-color: #f4f7f9;
+      padding: 20px;
+    }
+    .content-header h1 {
+      font-size: 24px;
+      color: #333;
+      margin: 0;
+    }
+  </style>
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
 <div class="wrapper">
@@ -60,14 +116,14 @@ require_once dirname(__DIR__) . '/../config.php';
     <!-- 왼쪽 햄버거 버튼 -->
     <ul class="navbar-nav">
       <li class="nav-item">
-        <!-- 사이드바 열고닫기 -->
-        <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+        <a class="nav-link" data-widget="pushmenu" href="#" role="button">
+          <i class="fas fa-bars"></i>
+        </a>
       </li>
       <li class="nav-item d-none d-sm-inline-block">
         <a href="/master/index.php" class="nav-link">홈</a>
       </li>
     </ul>
-
     <!-- 오른쪽 메뉴 -->
     <ul class="navbar-nav ml-auto">
       <li class="nav-item">
@@ -81,19 +137,19 @@ require_once dirname(__DIR__) . '/../config.php';
   <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- 브랜드 로고 -->
     <a href="/master/index.php" class="brand-link">
-      <!-- <img src="/master/AdminLte/dist/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8"> -->
+      <!-- 로고 이미지 (필요시 주석 해제) 
+      <img src="/master/AdminLte/dist/img/AdminLTELogo.png" alt="Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
+      -->
       <span class="brand-text font-weight-light">Raycoin Wallet</span>
     </a>
-
     <!-- Sidebar -->
     <div class="sidebar">
-      <!-- 유저 정보(옵션) -->
+      <!-- 유저 정보 -->
       <div class="user-panel mt-3 pb-3 mb-3 d-flex">
-        <div class="info" style="color:#fff;">
+        <div class="info">
           <span><?php echo $_SESSION['master_name']; ?> 님</span>
         </div>
       </div>
-
       <!-- 사이드바 메뉴 -->
       <nav class="mt-2">
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu">
@@ -104,7 +160,6 @@ require_once dirname(__DIR__) . '/../config.php';
               <p>대시보드</p>
             </a>
           </li>
-          
           <!-- 회원관리 메뉴 -->
           <li class="nav-item has-treeview">
             <a href="#" class="nav-link">
@@ -114,7 +169,7 @@ require_once dirname(__DIR__) . '/../config.php';
                 <i class="right fas fa-angle-left"></i>
               </p>
             </a>
-            <ul class="nav nav-treeview" style="display: none;">
+            <ul class="nav nav-treeview">
               <li class="nav-item">
                 <a href="/master/manage_user/userlist_view.php" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
@@ -133,10 +188,8 @@ require_once dirname(__DIR__) . '/../config.php';
                   <p>회원가입승인</p>
                 </a>
               </li>
-              <!-- 필요한 메뉴 추가 -->
             </ul>
           </li>
-
           <!-- 상위관리자 메뉴 -->
           <li class="nav-item has-treeview">
             <a href="#" class="nav-link">
@@ -146,17 +199,15 @@ require_once dirname(__DIR__) . '/../config.php';
                 <i class="right fas fa-angle-left"></i>
               </p>
             </a>
-            <ul class="nav nav-treeview" style="display: none;">
+            <ul class="nav nav-treeview">
               <li class="nav-item">
                 <a href="#" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
                   <p>관리자목록</p>
                 </a>
               </li>
-              <!-- 필요 메뉴 추가 -->
             </ul>
           </li>
-
           <!-- 입출금 관리 -->
           <li class="nav-item has-treeview">
             <a href="#" class="nav-link">
@@ -166,7 +217,7 @@ require_once dirname(__DIR__) . '/../config.php';
                 <i class="right fas fa-angle-left"></i>
               </p>
             </a>
-            <ul class="nav nav-treeview" style="display:none;">
+            <ul class="nav nav-treeview">
               <li class="nav-item">
                 <a href="/master/wallet/deposit_view.php" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
@@ -179,10 +230,8 @@ require_once dirname(__DIR__) . '/../config.php';
                   <p>임시 입금신청</p>
                 </a>
               </li>
-              <!-- 필요 메뉴 추가 -->
             </ul>
           </li>
-
           <!-- 기타 설정 -->
           <li class="nav-item has-treeview">
             <a href="#" class="nav-link">
@@ -192,7 +241,7 @@ require_once dirname(__DIR__) . '/../config.php';
                 <i class="right fas fa-angle-left"></i>
               </p>
             </a>
-            <ul class="nav nav-treeview" style="display:none;">
+            <ul class="nav nav-treeview">
               <li class="nav-item">
                 <a href="/master/others/lockup_manage.php" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
@@ -205,11 +254,8 @@ require_once dirname(__DIR__) . '/../config.php';
                   <p>락업기록 조회</p>
                 </a>
               </li>
-              <!-- 필요 메뉴 추가 -->
             </ul>
           </li>
-          
-          <!-- 필요시 더 추가 -->
         </ul>
       </nav>
       <!-- /.sidebar-menu -->
@@ -228,4 +274,4 @@ require_once dirname(__DIR__) . '/../config.php';
 
     <!-- 메인 콘텐츠 -->
     <section class="content">
-    <!-- 여기서부터 각 페이지가 들어갈 영역 -->
+      <!-- 여기서부터 각 페이지별 콘텐츠가 들어갑니다 -->

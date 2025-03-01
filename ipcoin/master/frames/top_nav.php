@@ -10,10 +10,60 @@ require_once dirname(__DIR__) . '/../frames/asset.php';
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>관리자 페이지</title>
     <link rel="stylesheet" href="/master/assets/css/main.css">
-
-
     <style>
-
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7f9;
+        }
+        .top-nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background-color: #ffffff;
+            padding: 15px 30px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        .top-nav h2 {
+            font-size: 24px;
+            color: #333;
+            margin: 0;
+        }
+        .info {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+        .info div {
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        .red {
+            background-color: #ffe6e6;
+            color: #d9534f;
+            font-weight: bold;
+        }
+        .blue {
+            background-color: #e6f2ff;
+            color: #337ab7;
+            font-weight: bold;
+        }
+        .blank {
+            flex-grow: 1;
+        }
+        .logout a {
+            text-decoration: none;
+            color: #fff;
+            background-color: #5cb85c;
+            padding: 10px 15px;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+        .logout a:hover {
+            background-color: #4cae4c;
+        }
     </style>
 </head>
 <body>
@@ -38,4 +88,5 @@ require_once dirname(__DIR__) . '/../frames/asset.php';
     </div>
 
 </body>
+</html>
 

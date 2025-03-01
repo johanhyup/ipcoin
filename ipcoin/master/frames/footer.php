@@ -6,14 +6,13 @@
   </div> <!-- /.content-wrapper -->
 
   <!-- Footer -->
-  <footer class="main-footer">
+  <footer class="main-footer" style="background-color: #fff; box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1); border-top: 1px solid #e0e0e0; padding: 15px 20px;">
     <div class="float-right d-none d-sm-inline">
-      <!-- 버전 표기나 기타 안내 -->
       <b>Version</b> 1.0.0
     </div>
     <strong>Copyright &copy; 
       <?php echo date('Y'); ?> 
-      <a href="#">Raycoin</a>.
+      <a href="#" style="color: #4CAF50; text-decoration: none;">IPcoin</a>.
     </strong> All rights reserved.
   </footer>
 </div> <!-- ./wrapper -->
