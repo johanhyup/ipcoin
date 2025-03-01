@@ -17,6 +17,7 @@ require_once dirname(__DIR__) . '/../frames/asset.php';
       background-color: #f4f7f9;
       color: #333;
     }
+
     /* 상단 네비게이션 바 */
     .top-nav {
       display: flex;
@@ -26,19 +27,23 @@ require_once dirname(__DIR__) . '/../frames/asset.php';
       padding: 15px 30px;
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
       margin-bottom: 20px;
+      /* 반응형에서 줄바꿈을 쉽게 하기 위해 flex-wrap 허용 */
+      flex-wrap: wrap;
     }
     .top-nav h2 {
-      font-size: 24px;
+      font-size: 20px;
       margin: 0;
+      /* 글씨를 검정색으로 변경 */
+      color: #333;
     }
 
-    /* 정보 영역 (현재 IP가격 / 총 입금액 등) */
+    /* 정보 영역 (현재 회원수, 신규회원수) */
     .info {
       display: flex;
-      gap: 30px; /* 항목 간격 */
+      gap: 20px; /* 항목 간격 */
       align-items: center;
+      flex-wrap: wrap; /* 화면이 좁아지면 줄바꿈 */
     }
-    /* 각 항목의 라벨/값 형태를 구분 */
     .info-item {
       font-size: 14px;
       display: flex;
@@ -53,7 +58,7 @@ require_once dirname(__DIR__) . '/../frames/asset.php';
       color: #333;
     }
 
-    /* 오른쪽 여백을 자동으로 채워주는 영역 */
+    /* 오른쪽으로 밀어내는 빈 영역 (화면 넓을 때만) */
     .blank {
       flex-grow: 1;
     }
@@ -63,50 +68,50 @@ require_once dirname(__DIR__) . '/../frames/asset.php';
       text-decoration: none;
       color: #fff;
       background-color: #5cb85c;
-      padding: 10px 15px;
+      /* 글씨를 조금 작게, 여백도 작게 */
+      font-size: 13px;
+      padding: 6px 10px;
       border-radius: 4px;
       transition: background-color 0.3s;
     }
     .logout a:hover {
       background-color: #4cae4c;
     }
+
+    /* 화면이 작아졌을 때(예: 768px 이하) 반응형 스타일 */
+    @media (max-width: 768px) {
+      .top-nav {
+        padding: 10px 15px;
+        margin-bottom: 10px;
+      }
+      .top-nav h2 {
+        font-size: 18px;
+      }
+      .info {
+        margin-top: 10px;
+      }
+    }
   </style>
 </head>
 <body>
   <!-- 상단 네비게이션 바 -->
   <div class="top-nav">
+    <!-- 좌측에 관리자 메뉴 (검정색 글씨) -->
     <h2>관리자 메뉴</h2>
+    
+    <!-- 가운데/오른쪽으로 회원수 정보 -->
     <div class="info">
-      <!-- 기존 빨간 박스 대신 간결하게 라벨+값 형태로 -->
       <div class="info-item">
-        <span class="label">현재 IP가격:</span>
-        <span class="value" id="closing_price_display">Loading...</span>
+        <span class="label">현재 회원수:</span>
+        <span class="value" id="current_users">72</span>
       </div>
       <div class="info-item">
-        <span class="label">총 입금액:</span>
-        <span class="value" id="total_deposit_display">1,000,000,000</span>
-      </div>
-      <div class="info-item">
-        <span class="label">총 출금액:</span>
-        <span class="value" id="total_withdraw_display">0</span>
-      </div>
-
-      <!-- 오른쪽으로 밀어내는 빈 영역 -->
-      <div class="blank"></div>
-      
-      <div class="info-item">
-        <span class="label">총 회원:</span>
-        <span class="value" id="total_users">72</span>
-      </div>
-      <div class="info-item">
-        <span class="label">총 관리자:</span>
-        <span class="value" id="total_admins">4</span>
-      </div>
-      <div class="info-item">
-        <span class="label">신규회원:</span>
+        <span class="label">신규회원수:</span>
         <span class="value" id="new_users">4</span>
       </div>
     </div>
+
+    <!-- 오른쪽 로그아웃 버튼 -->
     <div class="logout">
       <a href="/master/bbs/logout.php">로그아웃</a>
     </div>
