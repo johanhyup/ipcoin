@@ -1,6 +1,6 @@
 <?php
 session_start([
-    'cookie_lifetime' => 3000, // 쿠키 유효 시간
+    'cookie_lifetime' => 3000, // 쿠키 유효 시간: 600초 (10분)
 ]);
 
 // 세션 만료 확인
@@ -30,90 +30,239 @@ if (!isset($_SESSION['master_id']) || !isset($_SESSION['master_name'])) {
 }
 ?>
 
-<?php // 페이지 시작: header.php 불러오기
-require_once __DIR__ . '/frame/header.php'; ?>
+<!-- 사이드바: AdminLTE 구조 -->
+<aside class="main-sidebar sidebar-dark-primary elevation-4">
+  <!-- 사이드바 로고/상단 -->
+  <a href="/master/index.php" class="brand-link">
+    <span class="brand-text font-weight-light">Raycoin Admin</span>
+  </a>
 
-<!-- 여기에 페이지별 내용 (본문) -->
-<div class="container-fluid mt-5">
-    <h2>대시보드</h2>
-    <p>메인 콘텐츠...</p>
-
-    <!-- 왼쪽 네비게이션 바 -->
-    <div class="nav-bar" id="sidebar">
-        <ul>
-            <li><a href="/master/index.php" class="active">대시보드</a></li>
-            <li>
-                <a href="#" onclick="toggleSubMenu(event)">회원관리</a>
-                <ul>
-                    <li><a href="/master/manage_user/userlist_view.php">회원목록</a></li>
-                    <li><a href="#">회원실시간</a></li>
-                    <li><a href="/master/manage_user/user_log.php">회원 로그인 내역</a></li>
-                    <li><a href="#">회원 수정내역</a></li>
-                    <li><a href="#">회원 복구</a></li>
-                    <li><a href="/master/manage_user/user_info.php">회원가입승인</a></li>
-                </ul>
-            </li>
-            <li>
-                <a href="#" onclick="toggleSubMenu(event)">상위관리자</a>
-                <ul>
-                    <li><a href="#">관리자목록</a></li>
-                    <li><a href="#">관리자실시간</a></li>
-                    <li><a href="#">로그인 내역</a></li>
-                    <li><a href="#">수정내역</a></li>
-                    <li><a href="#">관리자 블락</a></li>
-                    <li><a href="#">관리자 트리뷰</a></li>
-                </ul>
-            </li>
-            <li>
-                <a href="#" onclick="toggleSubMenu(event)">입출금 관리</a>
-                <ul>
-                    <li><a href="/master/wallet/deposit_view.php">입금기록 관리</a></li>
-                    <li><a href="/master/wallet/deposit_manage.php">임시 입금신청</a></li>
-                    <li><a href="#">로그인 내역</a></li>
-                    <li><a href="#">수정내역</a></li>
-                    <li><a href="#">관리자 블락</a></li>
-                    <li><a href="#">관리자 트리뷰</a></li>
-                </ul>
-            </li>
-            <li><a href="#">상위관리자 입금신청</a></li>
-            <li><a href="#">전체 입출금 내역</a></li>
-            <li>
-                <a href="#" onclick="toggleSubMenu(event)">기타 설정</a>
-                <ul>
-                    <li><a href="/master/others/lockup_manage.php">락업시간 설정</a></li>
-                    <li><a href="/master/others/lockup_view.php">락업기록 조회</a></li>
-                    <li><a href="#">코인설정</a></li>
-                    <li><a href="#">블랙리스트</a></li>
-                    <li><a href="#">페이지 설정</a></li>
-                </ul>
-            </li>
-        </ul>
+  <!-- 사이드바 스크롤 영역 -->
+  <div class="sidebar">
+    <!-- 관리자 이름 등 간단히 표시할 수도 있음 -->
+    <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+      <div class="info">
+        <a href="#" class="d-block">
+          <?php echo htmlspecialchars($_SESSION['master_name'] ?? '관리자'); ?>
+        </a>
+      </div>
     </div>
-</div>
 
-<!-- JavaScript for toggling submenus -->
-<script>
-document.addEventListener("DOMContentLoaded", function () {
-    const menuItems = document.querySelectorAll(".nav-bar ul > li > a");
-    menuItems.forEach(function (menuItem) {
-        menuItem.addEventListener("click", function (event) {
-            const subMenu = this.nextElementSibling;
-            if (subMenu && subMenu.tagName === "UL") {
-                if (subMenu.style.display === "block") {
-                    subMenu.style.display = "none";
-                } else {
-                    document.querySelectorAll(".nav-bar ul li ul").forEach(function (otherSubMenu) {
-                        otherSubMenu.style.display = "none";
-                    });
-                    subMenu.style.display = "block";
-                }
-                event.preventDefault();
-            }
-        });
-    });
-});
-</script>
+    <!-- 실제 메뉴 -->
+    <nav class="mt-2">
+      <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu">
+        <!-- 대시보드 -->
+        <li class="nav-item">
+          <a href="/master/index.php" class="nav-link">
+            <i class="nav-icon fas fa-tachometer-alt"></i>
+            <p>대시보드</p>
+          </a>
+        </li>
 
-<?php // 페이지 끝: footer.php 불러오기
-require_once __DIR__ . '/frame/footer.php';
-?>
+        <!-- 회원관리 -->
+        <li class="nav-item has-treeview">
+          <a href="#" class="nav-link">
+            <i class="nav-icon fas fa-users"></i>
+            <p>
+              회원관리
+              <i class="right fas fa-angle-left"></i>
+            </p>
+          </a>
+          <ul class="nav nav-treeview">
+            <li class="nav-item">
+              <a href="/master/manage_user/userlist_view.php" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>회원목록</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="#" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>회원실시간</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="/master/manage_user/user_log.php" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>회원 로그인 내역</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="#" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>회원 수정내역</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="#" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>회원 복구</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="/master/manage_user/user_info.php" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>회원가입승인</p>
+              </a>
+            </li>
+          </ul>
+        </li>
+
+        <!-- 상위관리자 -->
+        <li class="nav-item has-treeview">
+          <a href="#" class="nav-link">
+            <i class="nav-icon fas fa-user-shield"></i>
+            <p>
+              상위관리자
+              <i class="right fas fa-angle-left"></i>
+            </p>
+          </a>
+          <ul class="nav nav-treeview">
+            <li class="nav-item">
+              <a href="#" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>관리자목록</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="#" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>관리자실시간</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="#" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>로그인 내역</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="#" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>수정내역</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="#" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>관리자 블락</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="#" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>관리자 트리뷰</p>
+              </a>
+            </li>
+          </ul>
+        </li>
+
+        <!-- 입출금 관리 -->
+        <li class="nav-item has-treeview">
+          <a href="#" class="nav-link">
+            <i class="nav-icon fas fa-wallet"></i>
+            <p>
+              입출금 관리
+              <i class="right fas fa-angle-left"></i>
+            </p>
+          </a>
+          <ul class="nav nav-treeview">
+            <li class="nav-item">
+              <a href="/master/wallet/deposit_view.php" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>입금기록 관리</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="/master/wallet/deposit_manage.php" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>임시 입금신청</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="#" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>로그인 내역</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="#" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>수정내역</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="#" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>관리자 블락</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="#" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>관리자 트리뷰</p>
+              </a>
+            </li>
+          </ul>
+        </li>
+
+        <li class="nav-item">
+          <a href="#" class="nav-link">
+            <i class="nav-icon fas fa-coins"></i>
+            <p>상위관리자 입금신청</p>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="#" class="nav-link">
+            <i class="nav-icon fas fa-history"></i>
+            <p>전체 입출금 내역</p>
+          </a>
+        </li>
+
+        <!-- 기타 설정 -->
+        <li class="nav-item has-treeview">
+          <a href="#" class="nav-link">
+            <i class="nav-icon fas fa-cog"></i>
+            <p>
+              기타 설정
+              <i class="right fas fa-angle-left"></i>
+            </p>
+          </a>
+          <ul class="nav nav-treeview">
+            <li class="nav-item">
+              <a href="/master/others/lockup_manage.php" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>락업시간 설정</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="/master/others/lockup_view.php" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>락업기록 조회</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="#" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>코인설정</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="#" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>블랙리스트</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="#" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>페이지 설정</p>
+              </a>
+            </li>
+          </ul>
+        </li>
+
+      </ul>
+    </nav>
+  </div>
+</aside>

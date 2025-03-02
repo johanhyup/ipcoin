@@ -1,192 +1,14 @@
-/* 기본 스타일 */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
+/* AdminLTE 사용 시, 대부분 AdminLTE에서 제공하는 스타일을 사용하므로
+   기존의 많은 스타일을 지워도 무방합니다.
+   여기서는 사이드바 메뉴 열고 닫기에 영향을 줄 수 있는 부분들을 삭제/수정했고,
+   필요한 최소한의 부분만 예시로 남겨뒀습니다. */
 
-body {
-    font-family: Arial, sans-serif;
-    display: flex;
-    min-height: 100vh;
-    background-color: #f9f9f9;
-    flex-direction: column;
-}
-
-/* 상단바 스타일 */
-.top-nav {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: #333;
-    color: #fff;
-    position: fixed;
-    top: 0;
-    width: 100%;
-    padding: 10px 20px;
-    z-index: 9999; /* 다른 요소 위로 */
-}
-
-.top-nav .info {
-    display: flex;
-    gap: 1.5vw;
-}
-
-.top-nav .info div {
-    background-color: #fff;
-    color: #333;
-    padding: 5px;
-    font-weight: bold;
-    text-align: center;
-    border-radius: 5px;
-    border: 1px solid #ddd;
-}
-
-.top-nav .info .red {
-    margin-left: 3vw;
-    background-color: #ffdddd;
-    color: #ff0000;
-    width: 8vw;
-}
-
-.top-nav .info .blue {
-    background-color: #ddeeff;
-    color: #0056b3;
-}
-
-.top-nav .info .blank {
-    background-color: #333;
-    border: none;
-    color: #0056b3;
-}
-
-.top-nav .logout {
-    cursor: pointer;
-    background-color: #ff4444;
-    color: white;
-    padding: 8px 12px;
-    border-radius: 5px;
-}
-
-/* 햄버거 버튼 스타일 */
-.hamburger {
-    display: none; /* 기본적으로 PC화면에서는 숨김 */
-    flex-direction: column;
-    justify-content: space-between;
-    width: 25px;
-    height: 20px;
-    cursor: pointer;
-    margin-right: 15px;
-}
-
-.hamburger span {
-    display: block;
-    height: 3px;
-    background-color: #fff;
-    border-radius: 2px;
-    transition: all 0.3s ease;
-}
-
-/* 네비게이션 바(사이드바) */
-.nav-bar {
-    width: 250px;
-    background-color: #333;
-    color: #fff;
-    position: fixed;
-    top: 70px; /* top-nav 높이만큼 아래로 */
-    left: 0;
-    height: calc(100% - 70px);
-    padding: 10px;
-    overflow-y: auto;
-    transition: transform 0.3s ease;
-}
-
-/* PC 환경에서는 사이드바가 항상 열려있도록(초기값) */
-.nav-bar.open {
-    transform: translateX(0);
-}
-
-/* 주 메뉴 */
-.nav-bar ul {
-    list-style: none;
-}
-.nav-bar ul li {
-    margin: 5px 0;
-}
-.nav-bar ul li a {
-    display: block;
-    padding: 8px 12px;
-    color: #fff;
-    text-decoration: none;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background 0.3s;
-}
-.nav-bar ul li a:hover {
-    background-color: #00bfff;
-}
-
-/* 하위 메뉴 */
-.nav-bar ul li ul {
-    list-style: none;
-    display: none; /* 초기에는 숨김 상태 */
-    padding-left: 15px;
-}
-
-.nav-bar ul li ul li a {
-    font-size: 14px;
-    background-color: #444;
-    padding: 5px 10px;
-    border-radius: 3px;
-}
-
-.nav-bar ul li ul li a:hover {
-    background-color: #00bfff;
-}
-
-/* 콘텐츠 영역(메인) */
-main {
-    display: flex;
-    padding: 20px;
-    width: calc(90% - 250px);
-    overflow-y: auto;
-    margin-top: 80px; /* top-nav 높이만큼 margin */
-}
-
-.top_bar{
-    display: flex;
-    justify-content: space-between;
-}
-
-.main2 {
-    position: relative;
-    padding: 20px;
-    width: calc(90% - 250px);
-    overflow-y: auto;
-    margin-top: 80px;
-}
-
-.main3 {
-    position: relative;
-    padding: 20px;
-    width: calc(90% - 250px);
-    overflow-y: auto;
-    margin-top: 80px;
-}
-
-main h1 {
-    margin-bottom: 20px;
-}
-main h2 {
-    margin-bottom: 20px;
-}
-
-/* 테이블 스타일 */
+/* 테이블 등 일부 공통 스타일 */
 table {
     width: 100%;
     border-collapse: collapse;
     margin-top: 20px;
-    background-color: white;
+    background-color: #ffffff;
 }
 
 table th,
@@ -196,35 +18,18 @@ table td {
     text-align: center;
 }
 
-table th {
-    background-color: #00bfff;
-    color: white;
-    font-weight: bold;
-}
-
-table tbody tr:nth-child(even) {
-    background-color: #f9f9f9;
-}
-
+/* 검색 바와 페이지네이션 예시 스타일 */
+.search-bar,
 .pagination {
-    margin-top: 10px;
-    text-align: center;
-}
-.pagination button {
-    padding: 5px 10px;
-    margin: 2px;
-}
-.search-bar {
     margin: 10px 0;
-    display: flex;
-    justify-content: space-between;
 }
+
 .input-box {
     padding: 5px;
     font-size: 14px;
 }
 
-/* 기본 버튼 스타일 */
+/* 버튼 */
 .action-button {
     padding: 5px 15px;
     margin: 5px;
@@ -235,71 +40,24 @@ table tbody tr:nth-child(even) {
     color: white;
 }
 
-/* 승인 버튼 (초록색) */
+/* AdminLTE 색상에 맞춘 버튼 예시 */
 .approve-button {
-    background-color: #28a745; /* 초록색 */
-    color: white;
-    padding: 2px;
+    background-color: #28a745;
 }
 .approve-button:hover {
-    background-color: #218838; /* 어두운 초록색 */
-    color: red;
-    padding: 2px;
+    background-color: #218838;
 }
 
-/* 블락 버튼 (빨간색) */
 .block-button {
-    background-color: #dc3545; /* 빨간색 */
-    color: white;
-    padding: 2px;
+    background-color: #dc3545;
 }
 .block-button:hover {
-    background-color: #c82333; /* 어두운 빨간색 */
-    color: red;
-    padding: 2px;
+    background-color: #c82333;
 }
 
-.edit-button{
+.edit-button {
+    background-color: #007bff;
+}
+.edit-button:hover {
     background-color: #0056b3;
-    color: white;
-    padding: 2px;
-}
-.edit-button:hover{
-    background-color: #7ca6d3be;
-    color: red;
-    padding: 2px;
-}
-.edit-button2{
-    background-color: #0056b3;
-    color: white;
-    padding: 2px;
-}
-.edit-button2:hover{
-    background-color: #7ca6d3be;
-    color: red;
-    padding: 2px;
-}
-
-
-/* ===== 반응형(모바일) 설정 ===== */
-@media (max-width: 768px) {
-    .hamburger {
-        display: flex; /* 모바일에서 햄버거 버튼 활성화 */
-    }
-    .top-nav .info {
-        display: none; /* 상단 정보들 숨김(필요 시 다른 처리 가능) */
-    }
-    .top-nav h2 {
-        margin-left: 10px;
-    }
-    /* 사이드바는 기본적으로 숨김 상태 */
-    .nav-bar {
-        transform: translateX(-100%);
-    }
-    /* 메인 영역 너비 조정 */
-    main, .main2, .main3 {
-        width: 100%;
-        margin-left: 0;
-        margin-top: 70px; /* 상단바 높이만큼 */
-    }
 }
