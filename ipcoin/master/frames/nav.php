@@ -21,13 +21,7 @@ $_SESSION['last_activity'] = time(); // 마지막 활동 시간 갱신
 require_once dirname(__DIR__) . '/../config.php';
 require_once dirname(__DIR__) . '/../frames/asset.php';
 
-if (!isset($_SESSION['master_id']) || !isset($_SESSION['master_name'])) {
-    echo "<script>
-        alert('관리자 로그인이 필요한 페이지입니다.');
-        window.location.href = '/master/bbs/login.php';
-    </script>";
-    exit;
-}
+
 ?>
 
 <!-- 사이드바: AdminLTE 구조 -->
