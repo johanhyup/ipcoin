@@ -88,36 +88,12 @@ try {
     }
     $stmt->close();
 
-    $message = "입금 요청이 성공적으로 {$status} 상태로 업데이트되었습니다.";
-    $success = true;
+    // 성공 응답 반환
+    echo json_encode(['success' => true, 'message' => "입금 요청이 성공적으로 {$status} 상태로 업데이트되었습니다."]);
 } catch (Exception $e) {
-    $message = $e->getMessage();
-    $success = false;
+    // 실패 응답 반환
+    echo json_encode(['success' => false, 'message' => $e->getMessage()]);
 } finally {
     $conn->close();
 }
 ?>
-
-<?php // 페이지 시작: header.php 불러오기
-require_once __DIR__ . '/frame/header.php'; ?>
-
-<!-- 여기에 페이지별 내용 (본문) -->
-<div class="container-fluid mt-5">
-  <div class="card">
-    <div class="card-header">입금 상태 업데이트 결과</div>
-    <div class="card-body">
-      <?php if ($success): ?>
-        <div class="alert alert-success">
-          <?= htmlspecialchars($message) ?>
-        </div>
-      <?php else: ?>
-        <div class="alert alert-danger">
-          <?= htmlspecialchars($message) ?>
-        </div>
-      <?php endif; ?>
-    </div><!-- card-body -->
-  </div><!-- card -->
-</div><!-- container-fluid -->
-
-<?php // 페이지 끝: footer.php 불러오기
-require_once __DIR__ . '/frame/footer.php'; ?>
