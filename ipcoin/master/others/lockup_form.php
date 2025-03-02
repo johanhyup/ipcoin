@@ -72,8 +72,6 @@ require_once __DIR__ . '/frames/header.php';
     </style>
 </head>
 <body>
-<?php require_once dirname(__DIR__) . '/../frames/header.php'; ?>
-
 <div class="container-fluid">
     <h2>코인 락업</h2>
     <div class="card">

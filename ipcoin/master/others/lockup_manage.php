@@ -1,6 +1,6 @@
 <?php
 // 페이지 시작: header.php 불러오기
-require_once __DIR__ . '/headers.php/';
+require_once __DIR__ . '/frames/headers.php/';
 ?>
 
 <!DOCTYPE html>
