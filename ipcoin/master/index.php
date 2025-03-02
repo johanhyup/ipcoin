@@ -1,11 +1,9 @@
-
-
 <!DOCTYPE html>
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>관리자 대시보드 | IPcoin Wallet</title>
+    <title>관리자 대시보드 | Raycoin Wallet</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -44,13 +42,9 @@
 require_once dirname(__DIR__) . '/master/frames/nav.php';
 require_once dirname(__DIR__) . '/master/frames/top_nav.php';
 // 추가 코드 작성 가능
-
 ?>
 
 <?php
-
-
-
 // 데이터베이스 연결
 require_once dirname(__DIR__) . '/config.php';
 
@@ -77,8 +71,16 @@ $conn->close();
 ?>
 <body>
 
-
-
+    <!-- 여기는 대시보드 내용 등 필요 시 작성 -->
+    <div class="container">
+        <h1>관리자 대시보드</h1>
+        <div class="card">
+            <h2>회원 수: <?php echo $user_count; ?></h2>
+        </div>
+        <div class="card">
+            <h2>출금 대기 건수: <?php echo $pending_withdrawals; ?></h2>
+        </div>
+    </div>
 
 </body>
 </html>
