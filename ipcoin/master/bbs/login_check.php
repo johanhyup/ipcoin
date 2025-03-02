@@ -9,16 +9,39 @@ $master_password = isset($_POST['master_password']) ? trim($_POST['master_passwo
 
 // 유효성 검사
 if (empty($master_id) || empty($master_password)) {
-    echo "<script>alert('아이디와 비밀번호를 모두 입력해주세요.'); history.back();</script>";
+    require_once dirname(__DIR__) . '/../frames/header.php';
+    ?>
+    <div class="container-fluid mt-5">
+      <div class="card">
+        <div class="card-header">로그인 오류</div>
+        <div class="card-body">
+          <p>아이디와 비밀번호를 모두 입력해주세요.</p>
+          <a href="javascript:history.back()" class="btn btn-secondary">뒤로가기</a>
+        </div>
+      </div>
+    </div>
+    <?php
+    require_once dirname(__DIR__) . '/../frames/footer.php';
     exit;
 }
 
 // 데이터베이스 연결
 $conn = new mysqli($servername, $username, $password, $dbname);
-
-// 연결 오류 검사
 if ($conn->connect_error) {
-    die("Database connection failed: " . $conn->connect_error);
+    require_once dirname(__DIR__) . '/../frames/header.php';
+    ?>
+    <div class="container-fluid mt-5">
+      <div class="card">
+        <div class="card-header">데이터베이스 연결 오류</div>
+        <div class="card-body">
+          <p><?php echo "Database connection failed: " . $conn->connect_error; ?></p>
+          <a href="javascript:history.back()" class="btn btn-secondary">뒤로가기</a>
+        </div>
+      </div>
+    </div>
+    <?php
+    require_once dirname(__DIR__) . '/../frames/footer.php';
+    exit;
 }
 
 try {
@@ -55,7 +78,18 @@ try {
         throw new Exception('아이디가 존재하지 않습니다.');
     }
 } catch (Exception $e) {
-    echo "<script>alert('로그인 실패: " . $e->getMessage() . "'); history.back();</script>";
+    require_once dirname(__DIR__) . '/../frames/header.php';
+    ?>
+    <div class="container-fluid mt-5">
+      <div class="card">
+        <div class="card-header">로그인 실패</div>
+        <div class="card-body">
+          <p><?php echo "로그인 실패: " . $e->getMessage(); ?></p>
+          <a href="javascript:history.back()" class="btn btn-secondary">뒤로가기</a>
+        </div>
+      </div>
+    </div>
+    <?php
 } finally {
     $stmt->close();
     $conn->close();

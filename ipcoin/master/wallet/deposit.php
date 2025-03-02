@@ -1,7 +1,7 @@
 <?php
 require_once dirname(__DIR__) . '/../config.php'; // 데이터베이스 연결 설정
-header('Content-Type: application/json');
 
+// DB 처리 및 입금/락업 로직
 try {
     $data = json_decode(file_get_contents("php://input"), true);
 
@@ -35,8 +35,6 @@ try {
     if ($userWalletAddress !== $depositAddress) {
         throw new Exception("입력된 지갑 주소가 사용자의 등록된 지갑 주소와 일치하지 않습니다.");
     }
-
-
 
     // `coin` 테이블에서 해당 유저의 코인 확인
     $coinQuery = $conn->prepare("SELECT id FROM coin WHERE user_id = ? AND name = ?");
@@ -94,10 +92,27 @@ try {
     $insertLockup->bind_param("iids", $coinId, $userId, $amount, $endDate);
     $insertLockup->execute();
 
-    echo json_encode(['success' => true, 'message' => '입금 및 락업 처리가 완료되었습니다.']);
+    $response = ['success' => true, 'message' => '입금 및 락업 처리가 완료되었습니다.'];
 } catch (Exception $e) {
-    echo json_encode(['success' => false, 'message' => $e->getMessage()]);
+    $response = ['success' => false, 'message' => $e->getMessage()];
 } finally {
     $conn->close();
 }
 ?>
+
+<?php // 페이지 시작: header.php 불러오기
+require_once __DIR__ . '/frame/header.php'; ?>
+
+<!-- 여기에 페이지별 내용 (본문) -->
+<div class="container-fluid mt-5">
+  <div class="card">
+    <div class="card-header">입금 처리 결과</div>
+    <div class="card-body">
+      <h2>입금 결과</h2>
+      <pre><?= htmlspecialchars(json_encode($response, JSON_PRETTY_PRINT)) ?></pre>
+    </div><!-- card-body -->
+  </div><!-- card -->
+</div><!-- container-fluid -->
+
+<?php // 페이지 끝: footer.php 불러오기
+require_once __DIR__ . '/frame/footer.php'; ?>

@@ -1,27 +1,27 @@
 <?php
 session_start(); // 세션 시작
 
-// 세션에서 사용자 정보 제거
+// 세션에서 사용자 정보 제거 및 파괴
 unset($_SESSION['master_id']);
 unset($_SESSION['master_name']);
 unset($_SESSION['rank']);
-
-// 세션 파괴
 session_destroy();
+
+// 헤더 포함
+require_once dirname(__DIR__) . '/../frames/header.php';
 ?>
 
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>로그아웃</title>
-    <script>
-        // 로그아웃 완료 메시지 후 로그인 페이지로 이동
-        alert("로그아웃이 완료되었습니다.");
-        window.location.href = "/master/bbs/login.php"; // 로그인 페이지로 리디렉션
-    </script>
-</head>
-<body>
-</body>
-</html>
+<div class="container-fluid mt-5">
+  <div class="card">
+    <div class="card-header">로그아웃</div>
+    <div class="card-body">
+      <p>로그아웃이 완료되었습니다.</p>
+      <a href="/master/bbs/login.php" class="btn btn-primary">로그인 페이지로 이동</a>
+    </div>
+  </div>
+</div>
+
+<?php
+// 푸터 포함
+require_once dirname(__DIR__) . '/../frames/footer.php';
+?>

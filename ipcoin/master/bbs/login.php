@@ -1,4 +1,3 @@
-
 <!doctype html>
 <html lang="ko">
 <head>
@@ -31,13 +30,18 @@ if (isset($_SESSION['master_id'])) {
         display: flex;
         justify-content: center; /* 수평 가운데 정렬 */
         align-items: center;     /* 수직 가운데 정렬 */
-     
-
     }
     .card {
         border: 1px solid #ddd;
         border-radius: 8px;
         box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .card-header {
+        background-color: #f7f7f7;
+        font-weight: bold;
+        text-align: center;
+        padding: 1rem;
+        border-bottom: 1px solid #ddd;
     }
     .btn-primary {
         background-color: #007bff;
@@ -55,9 +59,11 @@ if (isset($_SESSION['master_id'])) {
         <div class="row justify-content-center">
             <div class="col-lg-4 col-md-6">
                 <div class="card">
+                    <div class="card-header">
+                        관리자 로그인
+                    </div>
                     <div class="card-body">
                         <form action="login_check.php" method="post" autocomplete="off">
-                            <h3 class="text-center mb-4">관리자 로그인</h3>
                             <div class="mb-3">
                                 <label for="login_id">아이디</label>
                                 <input type="text" name="master_id" id="login_id" class="form-control" placeholder="아이디를 입력하세요" required>
@@ -71,10 +77,10 @@ if (isset($_SESSION['master_id'])) {
                             </div>
                         </form>
                     </div>
-                </div>
-            </div>
-        </div>
-    </div>
+                </div><!-- card -->
+            </div><!-- col -->
+        </div><!-- row -->
+    </div><!-- container -->
 </main>
 </body>
 </html>

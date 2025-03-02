@@ -36,89 +36,76 @@
 </head>
 <body>
 <?php
-// 현재 파일의 디렉토리를 기준으로 frames/nav.php 포함
-require_once dirname(__DIR__) . '/frames/nav.php';
-require_once dirname(__DIR__) . '/frames/top_nav.php';
-// 추가 코드 작성 가능
-
+// 페이지 시작: header.php 불러오기
+require_once __DIR__ . '/frame/header.php';
 ?>
-<div class="main2">
-    <div class="actions">
+
+<div class="container-fluid mt-5">
+  <div class="card">
+    <div class="card-header">입금 관리</div>
+    <div class="card-body">
+      <div class="actions" style="margin-bottom: 20px;">
         <h1>입금 관리</h1>
-  
-    </div>
-
-    <div class="search-bar">
+      </div>
+      <div class="search-bar" style="display: flex; gap: 1rem; flex-wrap: wrap;">
         <div>
-            <label for="rows-per-page">페이지당 줄 수:</label>
-            <input type="number" id="rows-per-page" class="input-box" min="1" value="10">
+          <label for="rows-per-page">페이지당 줄 수:</label>
+          <input type="number" id="rows-per-page" class="input-box" min="1" value="10">
         </div>
         <div>
-            <label for="search-input">아이디/닉네임/코인 검색:</label>
-            <input type="text" id="search-input" class="input-box" placeholder="검색어 입력">
-            <button id="search-button">검색</button>
+          <label for="search-input">아이디/닉네임/코인 검색:</label>
+          <input type="text" id="search-input" class="input-box" placeholder="검색어 입력">
+          <button id="search-button">검색</button>
         </div>
-
         <div>
-        <button id="depositButton" onclick="openLockupForm()">수동입금</button>
+          <button id="depositButton" onclick="openLockupForm()">수동입금</button>
         </div>
-    </div>
-
-    <table>
+      </div>
+      <table class="table table-bordered" style="width: 100%; border-collapse: collapse;">
         <thead>
-            <tr>
-                <th>번호</th>
-                <th>아이디</th>
-                <th>닉네임</th>
-                <th>코인</th>
-                <th>입금주소</th>
-                <th>금액</th>
-                <th>상태</th>
-                <th>신청일</th>
-                <th>승인</th>
- <!--               <th>수동입금</th>-->
-            </tr>
+          <tr>
+            <th>번호</th>
+            <th>아이디</th>
+            <th>닉네임</th>
+            <th>코인</th>
+            <th>입금주소</th>
+            <th>금액</th>
+            <th>상태</th>
+            <th>신청일</th>
+            <th>승인</th>
+          </tr>
         </thead>
         <tbody id="depositTableBody">
-            <!-- 데이터가 여기에 동적으로 들어옵니다 -->
+          <!-- 데이터가 여기에 동적으로 들어옵니다 -->
         </tbody>
-    </table>
-    <div id="pagination-container" class="pagination"></div>
-</div>
+      </table>
+      <div id="pagination-container" class="pagination"></div>
+    </div><!-- card-body -->
+  </div><!-- card -->
+</div><!-- container-fluid -->
 
 <script type="module">
-    import Pagination from '/master/assets/js/pagination.js';
+import Pagination from '/master/assets/js/pagination.js';
 
-    document.addEventListener("DOMContentLoaded", () => {
+// 새 창에서 입금 폼을 열도록 하는 함수
+function openLockupForm() {
+    window.open('/master/wallet/deposit_form.php', 'depositForm', 'width=600,height=600,resizable=yes,scrollbars=yes');
+}
+
+document.addEventListener("DOMContentLoaded", () => {
     let allData = [];
     let filteredData = [];
     let rowsPerPage = 10;
-
+    
     const tableBody = document.getElementById("depositTableBody");
     const searchInput = document.getElementById("search-input");
     const rowsPerPageInput = document.getElementById("rows-per-page");
     const paginationContainer = document.getElementById("pagination-container");
-
-    // Fetch deposit data
-    fetch('/master/wallet/deposit_list.php')
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                allData = data.deposits; // deposits 배열 사용
-                filteredData = allData;
-                renderTable(1);
-                setupPagination();
-            } else {
-                console.error('Error fetching deposits:', data.message);
-            }
-        })
-        .catch(error => console.error('Error fetching deposits:', error));
-
+    
     // Render table data
     function renderTable(page) {
         const start = (page - 1) * rowsPerPage;
         const end = start + rowsPerPage;
-
         tableBody.innerHTML = filteredData.slice(start, end).map((deposit, index) => `
             <tr>
                 <td>${start + index + 1}</td>
@@ -130,18 +117,15 @@ require_once dirname(__DIR__) . '/frames/top_nav.php';
                 <td>${deposit.status}</td>
                 <td>${deposit.created_at}</td>
                 <td>
-                    ${deposit.status === "pending"
-                        ? `
-                            <button class="approve-button" data-id="${deposit.deposit_id}">승인</button>
-                            <button class="reject-button" data-id="${deposit.deposit_id}">거절</button>
-                          `
-                        : '완료'}
+                  ${deposit.status === "pending" ? `
+                      <button class="approve-button" data-id="${deposit.deposit_id}">승인</button>
+                      <button class="reject-button" data-id="${deposit.deposit_id}">거절</button>
+                  ` : '완료'}
                 </td>
-            
             </tr>
         `).join('');
     }
-
+    
     // Setup pagination
     function setupPagination() {
         const totalPages = Math.ceil(filteredData.length / rowsPerPage);
@@ -153,9 +137,24 @@ require_once dirname(__DIR__) . '/frames/top_nav.php';
             paginationContainer.appendChild(button);
         }
     }
-
+    
+    // Fetch deposit data
+    fetch('/master/wallet/deposit_list.php')
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                allData = data.deposits;
+                filteredData = allData;
+                renderTable(1);
+                setupPagination();
+            } else {
+                console.error('Error fetching deposits:', data.message);
+            }
+        })
+        .catch(error => console.error('Error fetching deposits:', error));
+    
     // Search functionality
-    document.getElementById("search-button").addEventListener("click", () => {
+    searchInput.addEventListener("input", () => {
         const searchTerm = searchInput.value.toLowerCase();
         filteredData = allData.filter(deposit =>
             deposit.user_id_name.toLowerCase().includes(searchTerm) ||
@@ -165,46 +164,49 @@ require_once dirname(__DIR__) . '/frames/top_nav.php';
         renderTable(1);
         setupPagination();
     });
-
+    
     // Rows per page functionality
     rowsPerPageInput.addEventListener("change", () => {
         rowsPerPage = parseInt(rowsPerPageInput.value, 10) || 10;
         renderTable(1);
         setupPagination();
     });
-
+    
     // Approve or reject deposit
     tableBody.addEventListener("click", (event) => {
         const target = event.target;
         if (target.classList.contains("approve-button") || target.classList.contains("reject-button")) {
             const depositId = target.dataset.id;
             const action = target.classList.contains("approve-button") ? "approve" : "reject";
-
             if (confirm(`해당 입금을 ${action === "approve" ? "승인" : "거절"}하시겠습니까?`)) {
                 updateDepositStatus(depositId, action);
             }
         }
     });
-
+    
     function updateDepositStatus(depositId, action) {
         fetch('/master/wallet/update_deposit_status.php', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ deposit_id: depositId, action })
+            body: JSON.stringify({ deposit_id: depositId, action: action })
         })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    alert(`입금이 ${action === "approve" ? "승인" : "거절"}되었습니다.`);
-                    fetchDepositList(); // 테이블 새로고침
-                } else {
-                    alert(`입금 ${action === "approve" ? "승인" : "거절"} 실패: ${data.message}`);
-                }
-            })
-            .catch(error => console.error('Error updating deposit status:', error));
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert(`입금이 ${action === "approve" ? "승인" : "거절"}되었습니다.`);
+                location.reload();
+            } else {
+                alert(`입금 ${action === "approve" ? "승인" : "거절"} 실패: ${data.message}`);
+            }
+        })
+        .catch(error => console.error('Error updating deposit status:', error));
     }
 });
-
 </script>
+
+<?php
+// 페이지 끝: footer.php 불러오기
+require_once __DIR__ . '/frame/footer.php';
+?>
 </body>
 </html>
