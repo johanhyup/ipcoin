@@ -2,28 +2,6 @@
 // 세션 시작
 session_start();
 
-// (필요하다면) 세션 만료 처리
-if (isset($_SESSION['last_activity'])) {
-    if ((time() - $_SESSION['last_activity']) > 600) { // 10분
-        session_unset();
-        session_destroy();
-        echo "<script>
-            alert('세션이 만료되었습니다. 다시 로그인 해주세요.');
-            window.location.href = '/master/bbs/login.php';
-        </script>";
-        exit;
-    }
-}
-$_SESSION['last_activity'] = time();
-
-// 로그인 여부 체크
-if (!isset($_SESSION['master_id']) || !isset($_SESSION['master_name'])) {
-    echo "<script>
-        alert('관리자 로그인이 필요한 페이지입니다.');
-        window.location.href = '/master/bbs/login.php';
-    </script>";
-    exit;
-}
 
 // config.php나 DB 연결 필요 시 불러오기
 require_once __DIR__ . '/../../config.php';
