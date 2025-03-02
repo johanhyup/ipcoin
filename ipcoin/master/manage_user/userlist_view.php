@@ -2,7 +2,7 @@
 // /master/manage_user/userlist_view.php
 
 // (1) header.php 불러오기
-require_once __DIR__.'/../frame/header.php';
+require_once __DIR__.'/../frames/header.php';
 
 // (2) DB 연결, 승인/거절 처리
 // 이미 header.php에서 config.php 했으므로, 필요시 $conn 사용 가능
@@ -193,4 +193,4 @@ document.getElementById('reset-button').addEventListener('click', () => {
 
 <?php
 // (5) footer.php 불러오기
-require_once __DIR__.'/../frame/footer.php';
+require_once __DIR__.'/../frames/footer.php';

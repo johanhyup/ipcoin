@@ -92,7 +92,7 @@
   <!-- Footer (선택사항) -->
   <footer class="main-footer">
     <strong>Copyright &copy; 
-      <a href="#">Raycoin Wallet</a>.
+      <a href="#">IPoin Wallet</a>.
     </strong>
     All rights reserved.
   </footer>

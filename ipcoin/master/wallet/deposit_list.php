@@ -52,7 +52,7 @@ try {
 ?>
 
 <?php // 페이지 시작: header.php 불러오기
-require_once __DIR__ . '/frame/header.php'; ?>
+require_once __DIR__ . '/frames/header.php'; ?>
 
 <!-- 여기에 페이지별 내용 (본문) -->
 <div class="container-fluid mt-5">
@@ -104,4 +104,4 @@ require_once __DIR__ . '/frame/header.php'; ?>
 </div><!-- container-fluid -->
 
 <?php // 페이지 끝: footer.php 불러오기
-require_once __DIR__ . '/frame/footer.php'; ?>
+require_once __DIR__ . '/frames/footer.php'; ?>

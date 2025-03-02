@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/frame/header.php';
+require_once __DIR__ . '/frames/header.php';
 ?>
 <!DOCTYPE html>
 <html lang="ko">
@@ -134,7 +134,7 @@ document.getElementById("lockupForm").addEventListener("submit", (e) => {
 
 <?php
 // 페이지 끝: footer.php 불러오기
-require_once __DIR__ . '/frame/footer.php';
+require_once __DIR__ . '/frames/footer.php';
 ?>
 </body>
 </html>

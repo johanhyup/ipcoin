@@ -37,7 +37,7 @@
 <body>
 <?php
 // 페이지 시작: header.php 불러오기
-require_once __DIR__ . '/frame/header.php';
+require_once __DIR__ . '/frames/header.php';
 ?>
 
 <div class="container-fluid mt-5">
@@ -206,7 +206,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 <?php
 // 페이지 끝: footer.php 불러오기
-require_once __DIR__ . '/frame/footer.php';
+require_once __DIR__ . '/frames/footer.php';
 ?>
 </body>
 </html>
