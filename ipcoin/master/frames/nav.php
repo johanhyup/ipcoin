@@ -1,6 +1,6 @@
 <?php
 session_start([
-    'cookie_lifetime' => 3000, // 쿠키 유효 시간: 3000초
+    'cookie_lifetime' => 3000, // 쿠키 유효 시간: 600초 (10분)
 ]);
 
 // 세션 만료 확인
@@ -8,6 +8,7 @@ if (isset($_SESSION['last_activity'])) {
     if ((time() - $_SESSION['last_activity']) > 600) { // 10분 초과
         session_unset();
         session_destroy();
+
         echo "<script>
             alert('세션이 만료되었습니다. 다시 로그인 해주세요.');
             window.location.href = '/master/bbs/login.php';
@@ -28,6 +29,7 @@ if (!isset($_SESSION['master_id']) || !isset($_SESSION['master_name'])) {
     exit;
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -35,58 +37,6 @@ if (!isset($_SESSION['master_id']) || !isset($_SESSION['master_name'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>관리자 페이지</title>
     <link rel="stylesheet" href="/master/assets/css/main.css">
-    <style>
-        /* Navigation Bar Global Styles */
-        body {
-            margin: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f4f7f9;
-        }
-        .nav-bar {
-            width: 250px;
-            background-color: #fff;
-            box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-            border-right: 1px solid #e0e0e0;
-            position: fixed;
-            height: 100vh;
-            overflow-y: auto;
-        }
-        .nav-bar ul {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-        .nav-bar ul li {
-            margin-bottom: 10px;
-        }
-        .nav-bar ul li a {
-            display: block;
-            padding: 10px 15px;
-            text-decoration: none;
-            color: #333;
-            border-radius: 4px;
-            transition: background-color 0.3s, color 0.3s;
-        }
-        .nav-bar ul li a.active, 
-        .nav-bar ul li a:hover {
-            background-color: #4CAF50;
-            color: #fff;
-        }
-        .nav-bar ul li ul {
-            margin-top: 5px;
-            padding-left: 15px;
-            display: none;
-        }
-        .nav-bar ul li ul li a {
-            background-color: #f9f9f9;
-            color: #333;
-            padding: 8px 15px;
-        }
-        .nav-bar ul li ul li a:hover {
-            background-color: #e0e0e0;
-        }
-    </style>
     <script src="/master/assets/js/main.js"></script>
     <script src="/master/assets/js/deposit.js"></script>
     <script src="/master/assets/js/lockup_manage.js"></script>
@@ -95,7 +45,7 @@ if (!isset($_SESSION['master_id']) || !isset($_SESSION['master_name'])) {
 </head>
 <body>
     <!-- 왼쪽 네비게이션 바 -->
-    <div class="nav-bar">
+    <div class="nav-bar" id="nav-bar">
         <ul>
             <li><a href="/master/index.php" class="active">대시보드</a></li>
             <li>
@@ -146,30 +96,30 @@ if (!isset($_SESSION['master_id']) || !isset($_SESSION['master_name'])) {
         </ul>
     </div>
 
-    <!-- JavaScript: 하위 메뉴 토글 기능 -->
+    <!-- JavaScript -->
     <script>
-        function toggleSubMenu(event) {
-            event.preventDefault();
-            const subMenu = event.target.nextElementSibling;
-            if (subMenu && subMenu.tagName === "UL") {
-                // 다른 열린 하위 메뉴 모두 닫기
-                document.querySelectorAll(".nav-bar ul li ul").forEach(function(menu) {
-                    if(menu !== subMenu) {
-                        menu.style.display = "none";
-                    }
-                });
-                subMenu.style.display = (subMenu.style.display === "block") ? "none" : "block";
-            }
-        }
-
-        document.addEventListener("DOMContentLoaded", function() {
+        document.addEventListener("DOMContentLoaded", function () {
+            // 모든 상위 메뉴 항목에 이벤트 리스너 추가
             const menuItems = document.querySelectorAll(".nav-bar ul > li > a");
-            menuItems.forEach(function(item) {
-                item.addEventListener("click", function(e) {
-                    // 하위 메뉴가 있는 경우 자동으로 toggleSubMenu가 처리하므로 여기서는 리턴
-                    const nextElem = this.nextElementSibling;
-                    if (nextElem && nextElem.tagName === "UL") {
-                        e.preventDefault();
+
+            menuItems.forEach(function (menuItem) {
+                menuItem.addEventListener("click", function (event) {
+                    // 클릭된 메뉴의 하위 메뉴를 찾기
+                    const subMenu = this.nextElementSibling;
+
+                    if (subMenu && subMenu.tagName === "UL") {
+                        // 현재 하위 메뉴가 열려 있는지 확인하고 슬라이드 토글
+                        if (subMenu.style.display === "block") {
+                            subMenu.style.display = "none";
+                        } else {
+                            // 다른 열린 하위 메뉴를 모두 닫기
+                            document.querySelectorAll(".nav-bar ul li ul").forEach(function (otherSubMenu) {
+                                otherSubMenu.style.display = "none";
+                            });
+                            // 클릭된 하위 메뉴 열기
+                            subMenu.style.display = "block";
+                        }
+                        event.preventDefault(); // 링크 이동 방지
                     }
                 });
             });
