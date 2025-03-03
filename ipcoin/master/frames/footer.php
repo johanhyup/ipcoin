@@ -1,5 +1,6 @@
     </div> <!-- /.content-wrapper -->
 
+    
     <!-- 하단 Footer -->
     <footer class="main-footer">
         <div class="float-right d-none d-sm-inline">
@@ -15,11 +16,11 @@
 
 <!-- AdminLTE 스크립트 -->
 <!-- jQuery -->
-<script src="/master/AdminLte/plugins/jquery/jquery.min.js"></script>
+<script src="/master/adminlte/plugins/jquery/jquery.min.js"></script>
 <!-- Bootstrap 4 -->
-<script src="/master/AdminLte/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="/master/adminlte/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
 <!-- AdminLTE App -->
-<script src="/master/AdminLte/dist/js/adminlte.min.js"></script>
+<script src="/master/adminlte/dist/js/adminlte.min.js"></script>
 
 <!-- 필요 시 추가 JS -->
 <script src="/master/assets/js/main.js"></script>
