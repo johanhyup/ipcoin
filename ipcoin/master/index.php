@@ -1,31 +1,30 @@
-<!-- index.php -->
 <?php
-require_once dirname(__DIR__) . '/config.php';
-// 세션, DB 연결 등등...
+// index.php (변경 예시)
 
-// 세션에서 로그인한 관리자 정보 (예: $master_name, $rank)
-$master_name = $_SESSION['master_name'] ?? '관리자';
-$rank = $_SESSION['rank'] ?? '0';
+// 세션/DB 연결 등 기존 로직
+session_start();
+require_once dirname(__FILE__) . '/config.php';
 
-// 기존 예시 코드에서
-// $user_count = 총 회원 수
-// $pending_withdrawals = 출금 대기 중 건수
-// 라고 되어 있었는데, "코인" 용으로 사용하겠음.
+// 예: 간단한 통계 조회
+$conn = new mysqli($servername, $username, $password, $dbname);
+if ($conn->connect_error) {
+    die("Database connection failed: " . $conn->connect_error);
+}
+// 총 회원 수
+$user_count_result = $conn->query("SELECT COUNT(*) AS user_count FROM users");
+$user_count = $user_count_result->fetch_assoc()['user_count'] ?? 0;
 
-// 오늘 가입한 회원
-$today_users_result = $conn->query("
-    SELECT COUNT(*) AS today_count 
-    FROM users 
-    WHERE DATE(created_at) = CURDATE()
-");
-$today_users = $today_users_result->fetch_assoc()['today_count'] ?? 0;
+// 오늘 가입한 회원 수
+$today_count_result = $conn->query("SELECT COUNT(*) AS today_count FROM users WHERE DATE(created_at) = CURDATE()");
+$today_count = $today_count_result->fetch_assoc()['today_count'] ?? 0;
 
-// 코인 전송된 총량(샘플)
-$total_coin = 999999; // 임의
-// 오늘 전송된 코인(샘플)
-$today_coin = 123;    // 임의
+// 코인 총 전송량 (예시: DB 기준. 없으면 원하는 로직 추가)
+$coin_total_result = $conn->query("SELECT SUM(amount) AS total_sent FROM coin_transactions"); 
+$coin_total = $coin_total_result->fetch_assoc()['total_sent'] ?? 0;
 
-// (주의) 위 코인 관련 부분은 실제 DB 구조에 맞게 수정 필요
+// 오늘 전송된 코인량
+$coin_today_result = $conn->query("SELECT SUM(amount) AS today_sent FROM coin_transactions WHERE DATE(created_at) = CURDATE()");
+$coin_today = $coin_today_result->fetch_assoc()['today_sent'] ?? 0;
 
 $conn->close();
 ?>
@@ -33,125 +32,126 @@ $conn->close();
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="utf-8">
-  <title>대시보드</title>
-  <!-- AdminLTE / Bootstrap / FontAwesome -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/css/adminlte.min.css" />
-  <link rel="stylesheet" href="/master/assets/css/main.css">
+  <meta charset="UTF-8">
+  <title>IPcoin Wallet - 대시보드</title>
+  <!-- 여기에 CSS/JS (AdminLTE, Bootstrap 등) -->
 </head>
 <body class="hold-transition sidebar-mini">
-
 <div class="wrapper">
   <!-- 상단바 -->
-  <?php require_once dirname(__DIR__) . '/master/frames/top_nav.php'; ?>
-  <!-- 사이드바 -->
-  <?php require_once dirname(__DIR__) . '/master/frames/nav.php'; ?>
+  <?php require_once __DIR__ . '/master/frames/top_nav.php'; ?>
 
-  <!-- 메인 콘텐츠 WRAPPER -->
+  <!-- 사이드바 -->
+  <?php require_once __DIR__ . '/master/frames/nav.php'; ?>
+
+  <!-- 콘텐츠 WRAPPER -->
   <div class="content-wrapper">
-    <!-- content-header 부분에서 '관리자 대시보드' 등 헤더문구 제거 -->
+    <!-- 메인 콘텐츠 헤더 - "관리자 대시보드" 제거 -->
     <section class="content-header">
       <div class="container-fluid">
-        <!-- 굳이 문구 필요 없다면 완전히 비워둠 -->
+        <!-- 굳이 h1 태그를 쓰고 싶다면 비워둬도 됩니다 -->
+        <!-- <h1>관리자 대시보드</h1> --> 
       </div>
     </section>
 
-    <!-- 실제 대시보드 내용 -->
+    <!-- 메인 콘텐츠 -->
     <section class="content">
       <div class="container-fluid">
-
-        <!-- 2개 카드 배치 (가로 row) -->
+        
+        <!-- 여기서부터 카드 2개 (회원, 코인) -->
         <div class="row">
-          <!-- ================ 첫 번째 카드: 회원(파랑) ================ -->
+
+          <!-- 회원 카드 -->
           <div class="col-lg-4 col-md-6 col-sm-12">
             <div class="card">
-              <!-- 카드 헤더(배경 파랑, 글씨 흰색) -->
-              <div class="card-header bg-primary text-white">
-                <h3 class="card-title">회원</h3>
-                <!-- 우측에 '기록' 버튼 배치 (float-right) -->
-                <button type="button"
-                        class="btn btn-outline-light btn-sm float-right"
-                        style="border-radius: 15px; margin-left:10px;"
-                        onclick="openMemberLog()">
+              <!-- 카드 헤더: 파랑 배경, '회원' 이라는 글씨 흰색 -->
+              <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                <h3 class="card-title" style="margin:0;">회원</h3>
+                <!-- 기록 버튼(우측 상단) -->
+                <button class="btn btn-outline-light btn-sm" onclick="openLogPopup('user')">
                   기록
                 </button>
               </div>
-
-              <!-- 카드 내부 -->
-              <div class="card-body">
-                <!-- Total / Today 2개 필드 -->
-                <p>
-                  <strong>Total:</strong> 
-                  <span><?php echo number_format($user_count); ?></span>
-                </p>
-                <p>
-                  <strong>Today:</strong> 
-                  <span><?php echo number_format($today_users); ?></span>
-                </p>
+              <!-- 카드 바디: Total / Today 표시 -->
+              <div class="card-body" style="text-align:center;">
+                <div>
+                  <strong>Total</strong><br>
+                  <span style="font-size:1.2em; color:#000;">
+                    <?php echo number_format($user_count); ?>
+                  </span>
+                </div>
+                <hr>
+                <div>
+                  <strong>Today</strong><br>
+                  <span style="font-size:1.2em; color:#000;">
+                    <?php echo number_format($today_count); ?>
+                  </span>
+                </div>
               </div>
             </div>
           </div>
 
-          <!-- ================ 두 번째 카드: 코인(노랑) ================ -->
+          <!-- 코인 카드 -->
           <div class="col-lg-4 col-md-6 col-sm-12">
             <div class="card">
-              <!-- 카드 헤더(배경 노랑, 글씨 흰색) -->
-              <div class="card-header bg-warning text-white">
-                <h3 class="card-title">코인</h3>
-                <!-- 우측에 '기록' 버튼 배치 (float-right) -->
-                <button type="button"
-                        class="btn btn-outline-light btn-sm float-right"
-                        style="border-radius: 15px; margin-left:10px;"
-                        onclick="openCoinLog()">
+              <!-- 카드 헤더: 노랑 배경, '코인'이라는 글씨 흰색 -->
+              <div class="card-header bg-warning text-white d-flex justify-content-between align-items-center">
+                <h3 class="card-title" style="margin:0;">코인</h3>
+                <!-- 기록 버튼(우측 상단) -->
+                <button class="btn btn-outline-light btn-sm" onclick="openLogPopup('coin')">
                   기록
                 </button>
               </div>
-
-              <!-- 카드 내부 -->
-              <div class="card-body">
-                <!-- Total / Today 2개 필드 -->
-                <p>
-                  <strong>Total:</strong> 
-                  <span><?php echo number_format($total_coin); ?></span>
-                </p>
-                <p>
-                  <strong>Today:</strong> 
-                  <span><?php echo number_format($today_coin); ?></span>
-                </p>
+              <!-- 카드 바디: Total / Today 표시 -->
+              <div class="card-body" style="text-align:center;">
+                <div>
+                  <strong>Total</strong><br>
+                  <span style="font-size:1.2em; color:#000;">
+                    <?php echo number_format($coin_total, 2); ?>
+                  </span>
+                </div>
+                <hr>
+                <div>
+                  <strong>Today</strong><br>
+                  <span style="font-size:1.2em; color:#000;">
+                    <?php echo number_format($coin_today, 2); ?>
+                  </span>
+                </div>
               </div>
             </div>
           </div>
 
-        </div> <!-- .row -->
+        </div><!-- /.row -->
 
       </div><!-- /.container-fluid -->
-    </section>
+    </section><!-- /.content -->
   </div>
-  <!-- /콘텐츠 WRAPPER 끝 -->
+  <!-- /.content-wrapper -->
 
   <!-- Footer -->
-  <?php require_once dirname(__DIR__) . '/master/frames/footer.php'; ?>
-</div><!-- /.wrapper -->
+  <?php require_once __DIR__ . '/master/frames/footer.php'; ?>
+</div><!-- ./wrapper -->
 
-<!-- AdminLTE 및 jQuery, Bootstrap JS -->
+<!-- AdminLTE 및 필요한 JS -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/js/adminlte.min.js"></script>
+<script src="/master/AdminLte/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="/master/AdminLte/dist/js/adminlte.min.js"></script>
 
+<!-- 팝업 띄우기 예시 -->
 <script>
-  // "기록" 버튼 클릭 시 팝업을 띄우는 샘플
-  // 실제로 어떤 페이지를 열어서 어떻게 로그를 보여줄지는
-  // 별도 구현이 필요합니다.
-  function openMemberLog() {
-    // 회원 관련 이력 팝업
-    window.open('/master/logs/member_log.php','memberLog',
-      'width=800,height=600,scrollbars=yes,resizable=yes');
-  }
-  function openCoinLog() {
-    // 코인 관련 이력 팝업
-    window.open('/master/logs/coin_log.php','coinLog',
-      'width=800,height=600,scrollbars=yes,resizable=yes');
-  }
+function openLogPopup(type) {
+  // type === 'user' 일 경우 회원 가입 로그
+  // type === 'coin' 일 경우 코인 전송 로그
+  // 팝업 또는 모달로 처리 가능
+
+  // 예: 새 작은 창 띄우기
+  let url = '/master/logs/log_view.php?type=' + type; 
+  let popup = window.open(url, 'logPopup', 'width=600,height=600,scrollbars=yes');
+  
+  // 또는 Bootstrap Modal을 쓰려면 모달 요소를 HTML에 두고, Ajax 로드하여 표시
+  // $('#myModal').modal('show'); ...
+}
 </script>
+
 </body>
 </html>
