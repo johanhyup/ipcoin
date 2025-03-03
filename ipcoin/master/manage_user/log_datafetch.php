@@ -1,10 +1,12 @@
 <?php
-require_once dirname(__DIR__) . '/../config.php';
+require_once dirname(__DIR__) . '/../config.php'; // DB 연결
 
-header('Content-Type: application/json');
+header('Content-Type: application/json; charset=utf-8');
 
+// POST/GET 분기 제거하고, 단순 GET 요청을 처리
 try {
-    // 데이터 가져오는 SQL 쿼리
+    // user_access_logs + users + wallet + coin 테이블 조인
+    // (reset_password.php 파일에 있던 쿼리를 그대로 가져온 예시)
     $query = "
         SELECT 
             l.log_id,
@@ -30,26 +32,25 @@ try {
         ORDER BY l.log_id DESC
     ";
 
-    // SQL 실행
     $result = $conn->query($query);
-
     if (!$result) {
-        throw new Exception("데이터베이스 쿼리 오류: " . $conn->error);
+        throw new Exception("DB 조회 오류: " . $conn->error);
     }
 
-    // 결과를 배열로 변환
     $logs = [];
     while ($row = $result->fetch_assoc()) {
         $logs[] = $row;
     }
 
-    // JSON 응답 반환
-    echo json_encode(['success' => true, 'logs' => $logs]);
-
+    echo json_encode([
+        'success' => true,
+        'logs' => $logs
+    ]);
 } catch (Exception $e) {
-    // 오류 발생 시 응답 반환
-    echo json_encode(['success' => false, 'message' => $e->getMessage()]);
+    echo json_encode([
+        'success' => false,
+        'message' => $e->getMessage()
+    ]);
 } finally {
-    // 연결 종료
     $conn->close();
 }
