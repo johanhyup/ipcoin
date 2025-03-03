@@ -21,9 +21,9 @@ require_once __DIR__ . '/../../config.php';
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <!-- AdminLTE CSS -->
-  <link rel="stylesheet" href="/master/AdminLte/dist/css/adminlte.min.css">
+  <link rel="stylesheet" href="/master/adminlte/dist/css/adminlte.min.css">
   <!-- Font Awesome -->
-  <link rel="stylesheet" href="/master/AdminLte/plugins/fontawesome-free/css/all.min.css">
+  <link rel="stylesheet" href="/master/adminlte/plugins/fontawesome-free/css/all.min.css">
   <!-- 커스텀 CSS -->
   <link rel="stylesheet" href="/master/assets/css/main.css">
 </head>
