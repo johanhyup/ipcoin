@@ -50,7 +50,7 @@ require_once dirname(__DIR__) . '/../config.php';
 
         <!-- 코인 -->
         <li class="nav-item">
-          <a href="/master/wallet/deposit_view.php" class="nav-link">
+          <a href="/master/wallet/deposit_page.php" class="nav-link">
             <i class="nav-icon fas fa-coins"></i>
             <p>코인</p>
           </a>
