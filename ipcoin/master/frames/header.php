@@ -31,32 +31,11 @@ require_once __DIR__ . '/../../config.php';
        필요하면 이 자리에 다른 요소를 넣거나 그냥 비워둡니다. -->
 
   <!-- 메인 콘텐츠 WRAPPER -->
-  <div class="content-wrapper">
-    <!-- 상단 콘텐츠 헤더 (옵션) -->
-    <section class="content-header">
-      <div class="container-fluid">
-        <!-- 예: <h1>페이지 제목</h1> -->
-      </div>
-    </section>
 
-    <!-- 실제 페이지 내용 -->
-    <section class="content">
-      <!-- 이 내부에서 각 페이지별 컨텐츠를 출력 -->
-      <div class="container-fluid">
-        <h1>여기에 실제 페이지 컨텐츠</h1>
-        <p>상단바와 사이드바가 제거된 레이아웃 예시입니다.</p>
-      </div>
-    </section>
     <!-- /.content -->
-  </div>
+
   <!-- /.content-wrapper -->
 
-  <!-- 푸터(footer) 필요 시 -->
-  <footer class="main-footer">
-    <strong>&copy; 2025 IPcoin Wallet</strong>
-  </footer>
-
-</div><!-- /.wrapper 끝 -->
 
 <!-- AdminLTE 및 관련 스크립트 -->
 <script src="/master/AdminLte/plugins/jquery/jquery.min.js"></script>
