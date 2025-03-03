@@ -98,23 +98,6 @@ require_once dirname(__DIR__) . '/../frames/asset.php';
   </ul>
 </nav>
 
-<!-- 메인 컨텐츠 -->
-<div class="content-wrapper">
-  <section class="content">
-    <div class="container-fluid">
-      <h1>대시보드 내용</h1>
-      <!-- 나머지 페이지 내용 -->
-    </div>
-  </section>
-</div>
-
-<!-- 푸터 (필요 시) -->
-<footer class="main-footer">
-  <strong>&copy; 
-    <script>document.write(new Date().getFullYear())</script>
-    IP Wallet
-  </strong>
-</footer>
 
 <!-- JS 라이브러리 -->
 <script src="/path/to/jquery.min.js"></script>
