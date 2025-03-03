@@ -1,7 +1,4 @@
-<?php
-session_start([
-    'cookie_lifetime' => 3000, // 쿠키 유효 시간: 600초 (10분)
-]);
+
 
 // 세션 만료 확인
 if (isset($_SESSION['last_activity'])) {
