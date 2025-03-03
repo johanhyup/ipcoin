@@ -250,7 +250,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // 새 창에서 코인 수동입금 폼을 열도록 하는 함수
     function openLockupForm() {
-        window.open('/master/wallet/deposit_form.php', 'lockupForm', 'width=600,height=600,resizable=yes,scrollbars=yes');
+        window.open('/master/wallet/deposit_page.php', 'lockupForm', 'width=600,height=600,resizable=yes,scrollbars=yes');
     }
 
 
