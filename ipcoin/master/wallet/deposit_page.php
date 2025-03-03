@@ -32,8 +32,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/css/adminlte.min.css" />
     <link rel="stylesheet" href="/master/assets/css/main.css" />
-    <script src="/assets/js/deposit.js" defer></script>
-    <script src="/master/assets/js/main.js" defer></script>
+    <script src="./assets/js/deposit.js" defer></script>
+    <script src="./assets/js/main.js" defer></script>
 
 </head>
 
