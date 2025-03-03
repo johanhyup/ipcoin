@@ -45,13 +45,6 @@ require_once dirname(__DIR__) . '/../frames/asset.php';
     <!-- 실제 메뉴 -->
     <nav class="mt-2">
       <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu">
-        <!-- 대시보드 -->
-        <li class="nav-item">
-          <a href="/master/index.php" class="nav-link">
-            <i class="nav-icon fas fa-tachometer-alt"></i>
-            <p>대시보드</p>
-          </a>
-        </li>
 
         <!-- 회원관리 -->
         <li class="nav-item has-treeview">
