@@ -345,10 +345,10 @@ function openDetailModal(userId) {
 
   // Ajax로 상세정보 불러오기
   $.ajax({
-    url: '/master/manage_user/user_detail.php',
+    url: 'user_detail.php', // 현재 파일과 동일한 디렉토리 내에 있을 경우 상대경로 사용
     method: 'GET',
     data: { user_id: userId },
-    dataType: 'html', // 모달 내부를 통째로 HTML 조각으로 받아온다고 가정
+    dataType: 'html',
     success: function(html) {
       $('#userDetailContent').html(html);
       // 모달 열기
