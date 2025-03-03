@@ -84,7 +84,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <?php require_once dirname(__DIR__) . '/frames/nav.php'; ?>
 
     <script src="/master/assets/js/deposit.js" defer></script>
-    <script src="/master/assets/js/main.js" defer></script>
 <!-- 코인 전체 락업기간 변경경 -->
 <div class="card-body">
     <div class="actions">
