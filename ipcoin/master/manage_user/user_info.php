@@ -32,10 +32,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </style>
 </head>
 <body>
-<?php
-require_once dirname(__DIR__) . '/frames/nav.php';
-require_once dirname(__DIR__) . '/frames/top_nav.php';
-?>
+
 <div class="main2" style="    transform: translate(0%, 10%)">
 <h1>승인 관리</h1>
 <div class="search-bar">
