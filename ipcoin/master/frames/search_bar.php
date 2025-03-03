@@ -30,7 +30,7 @@ $conn->close();
         <input type="number" id="rows-per-page" class="form-control" min="1" value="10">
       </div>
       <div class="col-md-6 form-inline">
-        <label for="search-input" class="mr-2">아이디/닉네임 검색:</label>
+        <label for="search-input" class="mr-2">검색:</label>
         <input type="text" id="search-input" class="form-control" placeholder="검색어 입력">
         <button id="search-button" class="btn btn-primary ml-2">검색</button>
       </div>

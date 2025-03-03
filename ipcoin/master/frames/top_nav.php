@@ -1,22 +1,6 @@
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-  <meta charset="utf-8">
-  <title>관리자 대시보드</title>
-  <!-- 반응형 -->
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-  <!-- AdminLTE or Bootstrap CSS -->
-  <link rel="stylesheet" href="/path/to/adminlte.min.css">
-  <link rel="stylesheet" href="/path/to/bootstrap.min.css">
-  <link rel="stylesheet" href="/path/to/fontawesome.min.css">
-</head>
-<body class="hold-transition sidebar-mini layout-fixed">
-
 <?php
-// config.php 등 필요 파일 로드
+// top_nav.php
 require_once dirname(__DIR__) . '/../config.php';
-require_once dirname(__DIR__) . '/../frames/asset.php';
 ?>
 
 <!-- 상단 네비게이션바 -->
@@ -29,22 +13,26 @@ require_once dirname(__DIR__) . '/../frames/asset.php';
         <i class="fas fa-bars"></i>
       </a>
     </li>
-    <!-- 관리자 메뉴 (모바일에서는 숨기고 md 이상에서만 보이게) -->
-    <li class="nav-item d-none d-md-block">
+
+    <!-- (원래 '관리자 메뉴' 문구 or 버튼이 있었다면 제거) -->
+    <!-- <li class="nav-item d-none d-md-block">
       <span class="nav-link"><strong>관리자 메뉴</strong></span>
-    </li>
+    </li> -->
   </ul>
 
   <!-- 오른쪽 영역 -->
   <ul class="navbar-nav ml-auto">
-    <!-- IP 가격 (모바일/PC 모두 표시) -->
+    <!-- 기존 'IP 가격' 표시 부분 -> Story Protocol로 변경 -->
     <li class="nav-item">
       <span class="nav-link">
-        <span class="badge badge-danger" id="closing_price_display">IP가격: Loading...</span>
+        <span class="badge badge-danger" id="closing_price_display">
+          Story Protocol
+        </span>
       </span>
     </li>
 
-    <!-- 총 입금액 (모바일에서는 숨김: d-none d-md-block) -->
+    <!-- 총 입금액, 총 출금액, 총 관리자, 신규회원 등 모두 제거 -->
+    <!--
     <li class="nav-item d-none d-md-block">
       <span class="nav-link">
         <span class="badge badge-danger" id="total_deposit_display">
@@ -52,8 +40,6 @@ require_once dirname(__DIR__) . '/../frames/asset.php';
         </span>
       </span>
     </li>
-    
-    <!-- 총 출금액 (모바일에서는 숨김) -->
     <li class="nav-item d-none d-md-block">
       <span class="nav-link">
         <span class="badge badge-danger" id="total_withdraw_display">
@@ -61,17 +47,6 @@ require_once dirname(__DIR__) . '/../frames/asset.php';
         </span>
       </span>
     </li>
-
-    <!-- 총 회원 (모바일에서는 숨김) -->
-    <li class="nav-item d-none d-md-block">
-      <span class="nav-link">
-        <span class="badge badge-primary" id="total_users">
-          총 회원<br>72
-        </span>
-      </span>
-    </li>
-
-    <!-- 총 관리자 (모바일에서는 숨김) -->
     <li class="nav-item d-none d-md-block">
       <span class="nav-link">
         <span class="badge badge-primary" id="total_admins">
@@ -79,8 +54,6 @@ require_once dirname(__DIR__) . '/../frames/asset.php';
         </span>
       </span>
     </li>
-
-    <!-- 신규회원 (모바일에서는 숨김) -->
     <li class="nav-item d-none d-md-block">
       <span class="nav-link">
         <span class="badge badge-primary" id="new_users">
@@ -88,6 +61,7 @@ require_once dirname(__DIR__) . '/../frames/asset.php';
         </span>
       </span>
     </li>
+    -->
 
     <!-- 로그아웃 버튼 (모바일/PC 모두 표시) -->
     <li class="nav-item">
@@ -98,16 +72,11 @@ require_once dirname(__DIR__) . '/../frames/asset.php';
   </ul>
 </nav>
 
-
-<!-- JS 라이브러리 -->
-<script src="/path/to/jquery.min.js"></script>
-<script src="/path/to/bootstrap.bundle.min.js"></script>
-<script src="/path/to/adminlte.min.js"></script>
-
+<!-- JS 라이브러리 (원래 있던 스크립트들) -->
+<!-- 
+<script src="..."></script>
 <script>
-  // 예시: IP 가격 업데이트, 배지 값 업데이트 등
-  document.getElementById('closing_price_display').textContent = 'IP가격: 12345';
-</script>
-
-</body>
-</html>
+  // 예: IP가격 대신 textContent = 'Story Protocol';
+  // document.getElementById('closing_price_display').textContent = 'Story Protocol';
+</script> 
+-->
