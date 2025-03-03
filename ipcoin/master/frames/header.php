@@ -6,7 +6,9 @@ ini_set('display_errors', 1);
 
 <?php
 // 세션 시작
-session_start();
+if (seesion_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
 // config.php 및 필요한 파일 불러오기
 require_once __DIR__ . '/../../config.php';
