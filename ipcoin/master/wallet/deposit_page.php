@@ -275,18 +275,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     });
 
     // 입금 버튼 클릭 이벤트
-    <button id="depositButton" class="btn btn-primary">코인 수동입금</button>
-
-    <script>
-    document.getElementById('depositButton').addEventListener('click', () => {
-        openDepositPopup(123);
+    document.addEventListener('click', (event) => {
+        if (event.target.classList.contains('edit-button')) {
+            const userId = event.target.dataset.userId; // 버튼의 data-user-id 속성에서 idx 가져오기
+            if (userId) {
+                // deposit_form 페이지로 이동
+                const url = `/master/wallet/deposit_page.php?user_id=${userId}`;
+                window.open(url, '_blank', 'width=600,height=700');
+            } else {
+                alert('유효하지 않은 사용자입니다.');
+            }
+        }
     });
-
-    function openDepositPopup(userId) {
-        const url = `/master/wallet/deposit_page.php?user_id=${userId}`;
-        window.open(url, 'depositPage', 'width=600,height=600,resizable=yes,scrollbars=yes');
-    }
-    </script>
 
 
     //비밀번호 초기화
