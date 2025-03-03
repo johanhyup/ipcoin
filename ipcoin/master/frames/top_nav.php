@@ -14,7 +14,7 @@
 <body class="hold-transition sidebar-mini layout-fixed">
 
 <?php
-// 상위 디렉토리의 config.php 로드
+// config.php 등 필요 파일 로드
 require_once dirname(__DIR__) . '/../config.php';
 require_once dirname(__DIR__) . '/../frames/asset.php';
 ?>
