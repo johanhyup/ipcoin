@@ -1,6 +1,5 @@
 <?php
 session_start(); 
-require_once dirname(__DIR__) . '/../config.php';
 require_once dirname(__DIR__) . '/frames/header.php';
 ?>
 
@@ -32,8 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/css/adminlte.min.css" />
     <link rel="stylesheet" href="/master/assets/css/main.css" />
-    <script src="./assets/js/deposit.js" defer></script>
-    <script src="./assets/js/main.js" defer></script>
+
 
 </head>
 
@@ -94,6 +92,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </style>
 
 <body class="hold-transition sidebar-mini layout-fixed">
+<?php require_once dirname(__FILE__) . '/frames/top_nav.php' ;
+      require_once dirname(__FILE__) . '/frames/nav.php'; ?>
+    <script src="/master/assets/js/deposit.js" defer></script>
+    <script src="/master/assets/js/main.js" defer></script>
 <!-- 코인 전체 락업기간 변경경 -->
 <div class="card-body">
     <div class="actions">
@@ -514,6 +516,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </script>
 
 
-</body>
-</html>
 <?php $conn->close(); ?>
