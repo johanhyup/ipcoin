@@ -24,8 +24,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <div class="content-wrapper">
     <div class="container-fluid" style="margin-top: 20px;">
         <h1>사용자 관리</h1>
-        
-        <div class="search-bar" style="display:flex; gap:1rem; flex-wrap: wrap;">
+
+        <!-- 검색 바 -->
+        <div class="search-bar">
             <div>
                 <label for="rows-per-page">페이지당 줄 수:</label>
                 <input type="number" id="rows-per-page" class="input-box" min="1" value="10">
@@ -39,7 +40,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div>
                 <label for="reset-id">아이디:</label>
                 <input type="text" id="reset-id" class="input-box" placeholder="아이디 입력">
-                <button class="edit-button2" id="reset-button">비밀번호 초기화</button>
+                <button class="reset-button" id="reset-button">비밀번호 초기화</button>
                 <span id="reset-error" class="error"></span>
             </div>
             <div>
@@ -49,29 +50,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
         </div>
 
-        <table id="user-table" style="width:100%; border-collapse:collapse; margin-top: 1rem;">
-            <thead>
-                <tr>
-                    <th>번호</th>
-                    <th>아이디</th>
-                    <th>이름</th>
-                    <th>이메일</th>
-                    <th>연락처</th>
-                    <th>등급</th>
-                    <th>가입일</th>
-                    <th>지갑주소</th>
-                    <th>총 잔액</th>
-                    <th>사용 가능 잔액</th>
-                    <th>잠금 잔액</th>
-                    <th>승인 여부</th>
-                    <th>정보수정</th>
-                </tr>
-            </thead>
-            <tbody></tbody>
-        </table>
+        <!-- 반응형 테이블 -->
+        <div class="table-responsive">
+            <table id="user-table" class="table">
+                <thead>
+                    <tr>
+                        <th>번호</th>
+                        <th>아이디</th>
+                        <th>이름</th>
+                        <th>이메일</th>
+                        <th>연락처</th>
+                        <th>등급</th>
+                        <th>가입일</th>
+                        <th>지갑주소</th>
+                        <th>총 잔액</th>
+                        <th>사용 가능 잔액</th>
+                        <th>잠금 잔액</th>
+                        <th>승인 여부</th>
+                        <th>정보수정</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
 
         <!-- 페이지네이션 -->
-        <div id="pagination-container" class="pagination" style="margin-top: 1rem;"></div>
+        <div id="pagination-container" class="pagination"></div>
     </div>
 </div>
 
