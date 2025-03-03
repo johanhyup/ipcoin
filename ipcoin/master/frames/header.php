@@ -32,10 +32,10 @@ require_once __DIR__ . '/../../config.php';
 <div class="wrapper"><!-- AdminLTE 래퍼 시작 -->
 
   <!-- 상단 네비게이션 -->
-  <?php require_once __DIR__ . '/frames/top_nav.php'; ?>
+  <?php require_once __DIR__ . '/top_nav.php'; ?>
 
   <!-- 왼쪽 사이드바 -->
-  <?php require_once __DIR__ . '/frames/nav.php'; ?>
+  <?php require_once __DIR__ . '/nav.php'; ?>
 
   <!-- 메인 콘텐츠 WRAPPER -->
   <div class="content-wrapper">
