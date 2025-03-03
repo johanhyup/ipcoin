@@ -1,4 +1,6 @@
-<?php // 페이지 시작: header.php 불러오기
+<?php
+require_once dirname(__DIR__) . '/../config.php';
+
 require_once __DIR__ . '/frames/header.php'; 
 ?>
 
