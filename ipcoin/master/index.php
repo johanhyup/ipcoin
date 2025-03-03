@@ -1,28 +1,31 @@
+<!-- index.php -->
 <?php
-// 오류 메시지 표시 (개발 중 필요시)
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
-
-// 세션, DB 연결
-session_start();
 require_once dirname(__DIR__) . '/config.php';
+// 세션, DB 연결 등등...
 
-// DB 예시 쿼리
-// 기존: 총 회원 수
-$user_count_result = $conn->query("SELECT COUNT(*) AS user_count FROM users");
-$user_count = $user_count_result->fetch_assoc()['user_count'] ?? 0;
+// 세션에서 로그인한 관리자 정보 (예: $master_name, $rank)
+$master_name = $_SESSION['master_name'] ?? '관리자';
+$rank = $_SESSION['rank'] ?? '0';
 
-// 오늘 가입한 회원 수 (예시 쿼리)
-$today_result = $conn->query("SELECT COUNT(*) AS today_count FROM users WHERE DATE(created_at) = CURDATE()");
-$new_users_today = $today_result->fetch_assoc()['today_count'] ?? 0;
+// 기존 예시 코드에서
+// $user_count = 총 회원 수
+// $pending_withdrawals = 출금 대기 중 건수
+// 라고 되어 있었는데, "코인" 용으로 사용하겠음.
 
-// 기존에 있던: 출금 대기중 건수 → 여기서는 코인 통계로 가정
-$withdraw_pending_result = $conn->query("SELECT COUNT(*) AS pending_count FROM withdraw_requests WHERE status = '대기중'");
-$coin_total = $withdraw_pending_result->fetch_assoc()['pending_count'] ?? 0;
+// 오늘 가입한 회원
+$today_users_result = $conn->query("
+    SELECT COUNT(*) AS today_count 
+    FROM users 
+    WHERE DATE(created_at) = CURDATE()
+");
+$today_users = $today_users_result->fetch_assoc()['today_count'] ?? 0;
 
-// 오늘 전송된 코인 수 (예시)
-$today_coin_result = $conn->query("SELECT SUM(amount) AS today_coin FROM coin_transactions WHERE DATE(created_at) = CURDATE()");
-$coin_today = $today_coin_result->fetch_assoc()['today_coin'] ?? 0;
+// 코인 전송된 총량(샘플)
+$total_coin = 999999; // 임의
+// 오늘 전송된 코인(샘플)
+$today_coin = 123;    // 임의
+
+// (주의) 위 코인 관련 부분은 실제 DB 구조에 맞게 수정 필요
 
 $conn->close();
 ?>
@@ -30,72 +33,104 @@ $conn->close();
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8">
-  <title>IPcoin Wallet | 대시보드</title>
-  <!-- AdminLTE CSS / Bootstrap / FontAwesome CDN 예시 -->
+  <meta charset="utf-8">
+  <title>대시보드</title>
+  <!-- AdminLTE / Bootstrap / FontAwesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/css/adminlte.min.css" />
-  <!-- 기존 main.css 등 -->
   <link rel="stylesheet" href="/master/assets/css/main.css">
 </head>
 <body class="hold-transition sidebar-mini">
-<div class="wrapper">
 
+<div class="wrapper">
   <!-- 상단바 -->
   <?php require_once dirname(__DIR__) . '/master/frames/top_nav.php'; ?>
-
   <!-- 사이드바 -->
   <?php require_once dirname(__DIR__) . '/master/frames/nav.php'; ?>
 
-  <!-- 콘텐츠 WRAPPER -->
+  <!-- 메인 콘텐츠 WRAPPER -->
   <div class="content-wrapper">
+    <!-- content-header 부분에서 '관리자 대시보드' 등 헤더문구 제거 -->
+    <section class="content-header">
+      <div class="container-fluid">
+        <!-- 굳이 문구 필요 없다면 완전히 비워둠 -->
+      </div>
+    </section>
 
-    <!-- 내용 영역 -->
-    <section class="content pt-3">
+    <!-- 실제 대시보드 내용 -->
+    <section class="content">
       <div class="container-fluid">
 
-        <!-- 카드 2개 (회원 / 코인) -->
+        <!-- 2개 카드 배치 (가로 row) -->
         <div class="row">
-          <!-- 회원 카드 (파랑색) -->
+          <!-- ================ 첫 번째 카드: 회원(파랑) ================ -->
           <div class="col-lg-4 col-md-6 col-sm-12">
             <div class="card">
-              <!-- 카드 헤더: 파랑 배경 -->
-              <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
-                <h3 class="card-title mb-0">회원</h3>
-                <!-- 기록 버튼 -->
-                <button class="btn btn-outline-light btn-sm" onclick="openRecordPopup('member')">기록</button>
+              <!-- 카드 헤더(배경 파랑, 글씨 흰색) -->
+              <div class="card-header bg-primary text-white">
+                <h3 class="card-title">회원</h3>
+                <!-- 우측에 '기록' 버튼 배치 (float-right) -->
+                <button type="button"
+                        class="btn btn-outline-light btn-sm float-right"
+                        style="border-radius: 15px; margin-left:10px;"
+                        onclick="openMemberLog()">
+                  기록
+                </button>
               </div>
+
+              <!-- 카드 내부 -->
               <div class="card-body">
-                <!-- Total / Today 표시 -->
-                <p class="mb-1"><strong>Total</strong> : <?php echo number_format($user_count); ?></p>
-                <p class="mb-0"><strong>Today</strong> : <?php echo number_format($new_users_today); ?></p>
+                <!-- Total / Today 2개 필드 -->
+                <p>
+                  <strong>Total:</strong> 
+                  <span><?php echo number_format($user_count); ?></span>
+                </p>
+                <p>
+                  <strong>Today:</strong> 
+                  <span><?php echo number_format($today_users); ?></span>
+                </p>
               </div>
             </div>
           </div>
 
-          <!-- 코인 카드 (노란색) -->
+          <!-- ================ 두 번째 카드: 코인(노랑) ================ -->
           <div class="col-lg-4 col-md-6 col-sm-12">
             <div class="card">
-              <!-- 카드 헤더: 노랑 배경 -->
-              <div class="card-header bg-warning text-white d-flex justify-content-between align-items-center">
-                <h3 class="card-title mb-0">코인</h3>
-                <!-- 기록 버튼 -->
-                <button class="btn btn-outline-light btn-sm" onclick="openRecordPopup('coin')">기록</button>
+              <!-- 카드 헤더(배경 노랑, 글씨 흰색) -->
+              <div class="card-header bg-warning text-white">
+                <h3 class="card-title">코인</h3>
+                <!-- 우측에 '기록' 버튼 배치 (float-right) -->
+                <button type="button"
+                        class="btn btn-outline-light btn-sm float-right"
+                        style="border-radius: 15px; margin-left:10px;"
+                        onclick="openCoinLog()">
+                  기록
+                </button>
               </div>
+
+              <!-- 카드 내부 -->
               <div class="card-body">
-                <!-- Total / Today 표시 -->
-                <p class="mb-1"><strong>Total</strong> : <?php echo number_format($coin_total); ?></p>
-                <p class="mb-0"><strong>Today</strong> : <?php echo number_format($coin_today); ?></p>
+                <!-- Total / Today 2개 필드 -->
+                <p>
+                  <strong>Total:</strong> 
+                  <span><?php echo number_format($total_coin); ?></span>
+                </p>
+                <p>
+                  <strong>Today:</strong> 
+                  <span><?php echo number_format($today_coin); ?></span>
+                </p>
               </div>
             </div>
           </div>
-        </div>
+
+        </div> <!-- .row -->
 
       </div><!-- /.container-fluid -->
-    </section><!-- /.content -->
-  </div><!-- /.content-wrapper -->
+    </section>
+  </div>
+  <!-- /콘텐츠 WRAPPER 끝 -->
 
-  <!-- 하단 Footer -->
+  <!-- Footer -->
   <?php require_once dirname(__DIR__) . '/master/frames/footer.php'; ?>
 </div><!-- /.wrapper -->
 
@@ -104,26 +139,19 @@ $conn->close();
 <script src="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/js/adminlte.min.js"></script>
 
 <script>
-/**
- * 기록 버튼 클릭 시 팝업창 열기 (예시)
- * type: 'member' or 'coin'
- */
-function openRecordPopup(type) {
-  // 새 창으로 띄우거나, 모달 방식으로 구현 가능
-  // 여기서는 새 창 예시
-  let url = '/master/logs/' + type + '_log.php'; // 예: /master/logs/member_log.php
-  let popupWidth = 800;
-  let popupHeight = 600;
-  let left = (screen.width - popupWidth) / 2;
-  let top = (screen.height - popupHeight) / 2;
-
-  window.open(
-    url,
-    'logPopup',
-    `width=${popupWidth},height=${popupHeight},top=${top},left=${left},resizable=yes,scrollbars=yes`
-  );
-}
+  // "기록" 버튼 클릭 시 팝업을 띄우는 샘플
+  // 실제로 어떤 페이지를 열어서 어떻게 로그를 보여줄지는
+  // 별도 구현이 필요합니다.
+  function openMemberLog() {
+    // 회원 관련 이력 팝업
+    window.open('/master/logs/member_log.php','memberLog',
+      'width=800,height=600,scrollbars=yes,resizable=yes');
+  }
+  function openCoinLog() {
+    // 코인 관련 이력 팝업
+    window.open('/master/logs/coin_log.php','coinLog',
+      'width=800,height=600,scrollbars=yes,resizable=yes');
+  }
 </script>
-
 </body>
 </html>
