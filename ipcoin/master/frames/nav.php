@@ -1,31 +1,31 @@
 <?php
 /**
  * nav.php
- *  - 사이드바를 "대시보드", "회원", "코인" 3가지 메뉴만 남기고
+ *  - 사이드바를 "대시보드", "회원", "코인" 3가지 메뉴만 남기기
  *  - 하위 메뉴 없애기
+ *  - “관리자” 표시 제거
  */
- 
-// 기존 config 파일, 세션 등 필요한 부분은 그대로 둡니다.
 require_once dirname(__DIR__) . '/../config.php'; 
 ?>
 
 <!-- 메인 사이드바(AdminLTE 구조) -->
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
-  <!-- 로고 영역 (원하시면 로고부분은 그대로 두셔도 되고 필요없으면 주석처리) -->
+  <!-- 로고 영역 -->
   <a href="/master/index.php" class="brand-link">
     <span class="brand-text font-weight-light">IPcoin Admin</span>
   </a>
 
   <!-- 사이드바 내용 -->
   <div class="sidebar">
-    <!-- (관리자 이름 표시 등) -->
+    <!-- 관리자(사용자) 이름 표시 부분 삭제
     <div class="user-panel mt-3 pb-3 mb-3 d-flex">
       <div class="info">
         <a href="#" class="d-block">
-          <?php echo htmlspecialchars($_SESSION['master_name'] ?? '관리자'); ?>
+          <?php // echo htmlspecialchars($_SESSION['master_name'] ?? '관리자'); ?>
         </a>
       </div>
     </div>
+    -->
 
     <!-- 실제 메뉴 -->
     <nav class="mt-2">
