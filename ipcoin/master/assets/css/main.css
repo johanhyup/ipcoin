@@ -1,7 +1,11 @@
 /* ============================
    공통 스타일 (AdminLTE 기반 유지)
 ============================ */
-
+@media only screen and (max-width: 768px) {
+    .desktop-only {
+        display: none !important;
+    }
+}
 /* 기본 테이블 스타일 */
 table {
     width: 100%;
@@ -25,12 +29,6 @@ table td {
     -webkit-overflow-scrolling: touch; /* 모바일에서 부드러운 스크롤 */
 }
 
-/* 테이블 크기 제한 */
-@media screen and (max-width: 768px) {
-    table {
-        font-size: 14px; /* 글자 크기 축소 */
-    }
-}
 
 /* ============================
    검색 바 & 페이지네이션
