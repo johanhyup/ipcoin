@@ -21,18 +21,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <?php require_once dirname(__FILE__) . '/../frames/header.php'; ?>
 <?php require_once dirname(__FILE__) . '/../frames/sidebar.php'; ?>
 
-<!-- Content Wrapper. Contains page content -->
-<div class="content-wrapper">
-    <!-- Content Header (Page header) -->
-    <section class="content-header">
-      <div class="container-fluid">
-        <div class="row mb-2">
-          <div class="col-sm-6">
-            <h1>코인 관리</h1>
-          </div>
-        </div>
-      </div>
-    </section>
 
     <!-- Main content -->
     <section class="content">
