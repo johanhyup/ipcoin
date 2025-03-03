@@ -1,9 +1,8 @@
-/* AdminLTE 사용 시, 대부분 AdminLTE에서 제공하는 스타일을 사용하므로
-   기존의 많은 스타일을 지워도 무방합니다.
-   여기서는 사이드바 메뉴 열고 닫기에 영향을 줄 수 있는 부분들을 삭제/수정했고,
-   필요한 최소한의 부분만 예시로 남겨뒀습니다. */
+/* ============================
+   공통 스타일 (AdminLTE 기반 유지)
+============================ */
 
-/* 테이블 등 일부 공통 스타일 */
+/* 기본 테이블 스타일 */
 table {
     width: 100%;
     border-collapse: collapse;
@@ -16,31 +15,70 @@ table td {
     padding: 10px;
     border: 1px solid #ddd;
     text-align: center;
+    white-space: nowrap; /* 텍스트 줄바꿈 방지 */
 }
 
-/* 검색 바와 페이지네이션 예시 스타일 */
+/* 반응형 테이블: 모바일에서 가로 스크롤 가능 */
+.table-responsive {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch; /* 모바일에서 부드러운 스크롤 */
+}
+
+/* 테이블 크기 제한 */
+@media screen and (max-width: 768px) {
+    table {
+        font-size: 14px; /* 글자 크기 축소 */
+    }
+}
+
+/* ============================
+   검색 바 & 페이지네이션
+============================ */
 .search-bar,
 .pagination {
     margin: 10px 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
 }
 
 .input-box {
-    padding: 5px;
+    padding: 8px;
     font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
 }
 
-/* 버튼 */
+/* 검색 버튼 */
+.search-button {
+    padding: 8px 12px;
+    font-size: 14px;
+    border: none;
+    border-radius: 4px;
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+}
+.search-button:hover {
+    background-color: #0056b3;
+}
+
+/* ============================
+   버튼 스타일 (AdminLTE 색상 유지)
+============================ */
 .action-button {
-    padding: 5px 15px;
-    margin: 5px;
+    padding: 6px 12px;
     border: none;
     border-radius: 4px;
     font-size: 14px;
     cursor: pointer;
     color: white;
+    transition: 0.2s;
 }
 
-/* AdminLTE 색상에 맞춘 버튼 예시 */
+/* 승인 버튼 */
 .approve-button {
     background-color: #28a745;
 }
@@ -48,6 +86,7 @@ table td {
     background-color: #218838;
 }
 
+/* 차단 버튼 */
 .block-button {
     background-color: #dc3545;
 }
@@ -55,9 +94,19 @@ table td {
     background-color: #c82333;
 }
 
+/* 수정 버튼 */
 .edit-button {
     background-color: #007bff;
 }
 .edit-button:hover {
     background-color: #0056b3;
+}
+
+/* 비밀번호 초기화 버튼 */
+.reset-button {
+    background-color: #ffc107;
+    color: #212529;
+}
+.reset-button:hover {
+    background-color: #e0a800;
 }
