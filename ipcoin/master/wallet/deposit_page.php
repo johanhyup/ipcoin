@@ -91,9 +91,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 </style>
 
-<body class="hold-transition sidebar-mini layout-fixed">
-<?php require_once dirname(__FILE__) . '/frames/top_nav.php' ;
-      require_once dirname(__FILE__) . '/frames/nav.php'; ?>
+<body class="hold-transition sidebar-mini layout-fixed">  
+     <!-- Top Navigation -->
+    <?php require_once dirname(__DIR__) . '/frames/top_nav.php'; ?>
+    <!-- Sidebar Navigation -->
+    <?php require_once dirname(__DIR__) . '/frames/nav.php'; ?>
+
     <script src="/master/assets/js/deposit.js" defer></script>
     <script src="/master/assets/js/main.js" defer></script>
 <!-- 코인 전체 락업기간 변경경 -->
