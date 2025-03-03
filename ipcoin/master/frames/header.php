@@ -1,4 +1,10 @@
 <?php
+// 오류 메시지 표시 활성화
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+?>
+
+<?php
 // 세션 시작
 session_start();
 
