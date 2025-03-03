@@ -1,20 +1,24 @@
 <?php
-// nav.php (변경 예시)
-
-// DB나 세션, config 연결 등 기존 로직이 있다면 필요한 부분만 유지하세요.
-require_once dirname(__DIR__) . '/../config.php';
+/**
+ * nav.php
+ *  - 사이드바를 "대시보드", "회원", "코인" 3가지 메뉴만 남기고
+ *  - 하위 메뉴 없애기
+ */
+ 
+// 기존 config 파일, 세션 등 필요한 부분은 그대로 둡니다.
+require_once dirname(__DIR__) . '/../config.php'; 
 ?>
 
-<!-- 메인 사이드바 -->
+<!-- 메인 사이드바(AdminLTE 구조) -->
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
-
-  <!-- 사이드바 상단 로고/브랜드 영역 -->
+  <!-- 로고 영역 (원하시면 로고부분은 그대로 두셔도 되고 필요없으면 주석처리) -->
   <a href="/master/index.php" class="brand-link">
     <span class="brand-text font-weight-light">IPcoin Admin</span>
   </a>
 
+  <!-- 사이드바 내용 -->
   <div class="sidebar">
-    <!-- (관리자 정보 표시 구간 - 필요 시 유지) -->
+    <!-- (관리자 이름 표시 등) -->
     <div class="user-panel mt-3 pb-3 mb-3 d-flex">
       <div class="info">
         <a href="#" class="d-block">
@@ -23,18 +27,19 @@ require_once dirname(__DIR__) . '/../config.php';
       </div>
     </div>
 
-    <!-- 실제 메뉴 - 요구사항에 맞게 3개만 남김 -->
+    <!-- 실제 메뉴 -->
     <nav class="mt-2">
-      <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu">
+      <ul class="nav nav-pills nav-sidebar flex-column" 
+          data-widget="treeview" role="menu" data-accordion="false">
         
         <!-- 대시보드 -->
         <li class="nav-item">
           <a href="/master/index.php" class="nav-link">
-            <i class="nav-icon fas fa-home"></i>
+            <i class="nav-icon fas fa-tachometer-alt"></i>
             <p>대시보드</p>
           </a>
         </li>
-
+        
         <!-- 회원 -->
         <li class="nav-item">
           <a href="/master/manage_user/userlist_view.php" class="nav-link">
@@ -51,13 +56,7 @@ require_once dirname(__DIR__) . '/../config.php';
           </a>
         </li>
 
-        <!-- 
-        // 나머지 메뉴는 모두 주석 처리하거나 제거
-        <li class="nav-item has-treeview">
-          ...
-        </li>
-        -->
       </ul>
     </nav>
-  </div>
+  </div><!-- /.sidebar -->
 </aside>
