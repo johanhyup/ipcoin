@@ -66,7 +66,7 @@ require_once __DIR__ . '/../../config.php';
       <!-- 로고 이미지가 있을 경우 
       <img src="/master/AdminLte/dist/img/AdminLTELogo.png" alt="Logo" class="brand-image img-circle elevation-3" style="opacity: .8"/>
       -->
-      <span class="brand-text font-weight-light">Raycoin Wallet</span>
+      <span class="brand-text font-weight-light">IPcoin Wallet</span>
     </a>
 
     <!-- 사이드바 영역 -->

@@ -13,47 +13,54 @@ require_once dirname(__DIR__) . '/../frames/asset.php';
         <i class="fas fa-bars"></i>
       </a>
     </li>
-    <li class="nav-item d-none d-sm-inline-block">
+    <!-- 관리자 메뉴 텍스트 (모바일에서는 숨기고 md 이상에서만 보이도록) -->
+    <li class="nav-item d-none d-md-block">
       <span class="nav-link"><strong>관리자 메뉴</strong></span>
     </li>
   </ul>
 
   <!-- 오른쪽 영역 -->
   <ul class="navbar-nav ml-auto">
-    <!-- IP 가격 등 정보를 표시할 수 있는 영역 (예: badge 등) -->
+    <!-- IP 가격 (모바일/PC 모두에서 표시) -->
     <li class="nav-item">
       <span class="nav-link">
         <span class="badge badge-danger" id="closing_price_display">IP가격: Loading...</span>
       </span>
     </li>
-    <li class="nav-item">
+
+    <!-- 총 입금액 (모바일에서는 숨기고 md 이상에서만 보임) -->
+    <li class="nav-item d-none d-md-block">
       <span class="nav-link">
         <span class="badge badge-danger" id="total_deposit_display">총 입금액<br>1,000,000,000</span>
       </span>
     </li>
-    <li class="nav-item">
+    <!-- 총 출금액 (모바일에서는 숨기고 md 이상에서만 보임) -->
+    <li class="nav-item d-none d-md-block">
       <span class="nav-link">
         <span class="badge badge-danger" id="total_withdraw_display">총 출금액<br>0</span>
       </span>
     </li>
-    <!-- 구분 -->
-    <li class="nav-item">
+    
+    <!-- 총 회원 (모바일에서는 숨기고 md 이상에서만 보임) -->
+    <li class="nav-item d-none d-md-block">
       <span class="nav-link">
         <span class="badge badge-primary" id="total_users">총 회원<br>72</span>
       </span>
     </li>
-    <li class="nav-item">
+    <!-- 총 관리자 (모바일에서는 숨기고 md 이상에서만 보임) -->
+    <li class="nav-item d-none d-md-block">
       <span class="nav-link">
         <span class="badge badge-primary" id="total_admins">총 관리자<br>4</span>
       </span>
     </li>
-    <li class="nav-item">
+    <!-- 신규회원 (모바일에서는 숨기고 md 이상에서만 보임) -->
+    <li class="nav-item d-none d-md-block">
       <span class="nav-link">
         <span class="badge badge-primary" id="new_users">신규회원<br>4</span>
       </span>
     </li>
 
-    <!-- 로그아웃 버튼 -->
+    <!-- 로그아웃 버튼 (모바일/PC 모두에서 표시) -->
     <li class="nav-item">
       <a class="nav-link btn btn-danger text-white" href="/master/bbs/logout.php">
         로그아웃
