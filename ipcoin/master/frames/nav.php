@@ -1,5 +1,4 @@
-
-
+<?php
 // 세션 만료 확인
 if (isset($_SESSION['last_activity'])) {
     if ((time() - $_SESSION['last_activity']) > 600) { // 10분 초과
