@@ -6,7 +6,7 @@ ini_set('display_errors', 1);
 
 <?php
 // 세션 시작
-if (seesion_status() === PHP_SESSION_NONE) {
+if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
