@@ -398,7 +398,7 @@ if (isset($_GET['action']) && $_GET['action'] === 'search') {
         }
 
         // 이제 deposit_page.php(또는 deposit_form.php)에 user_id를 쿼리로 넘겨 새 창 열기
-        const url = `/master/wallet/deposit_page.php?user_id=${encodeURIComponent(inputUserId)}`;
+        const url = `/master/wallet/deposit_view.php?user_id=${encodeURIComponent(inputUserId)}`;
         window.open(url, 'lockupForm', 'width=600,height=600,resizable=yes,scrollbars=yes');
     }
 
