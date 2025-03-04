@@ -1,83 +1,108 @@
 <?php
-/**
- * user_detail.php
- * - 특정 user_id에 대한 상세 정보를 HTML 형태로 반환
- * - 모달 내부에 표시
- */
-session_start();
-require_once dirname(__DIR__, 2) . '/config.php';
+// user_detail.php
+// : userlist_view.php에서 Ajax로 불러오는 상세정보 페이지 (HTML 조각)
 
-$user_id = isset($_GET['user_id']) ? (int)$_GET['user_id'] : 0;
-if($user_id <= 0) {
-  echo "<p>잘못된 접근입니다.</p>";
-  exit;
+// DB 연결이 필요한 경우, 상단에 require_once... (이미 userlist_view.php에서 연결했다면, 
+//  여기도 같은 conn을 쓸 수 있도록 전역화하거나, 별도 연결)
+
+// 일단 이 예시에선 간단히 다음 형태로 가정:
+require_once dirname(__DIR__) . '/../config.php';
+$userId = isset($_GET['user_id']) ? intval($_GET['user_id']) : 0;
+if (!$userId) {
+    echo "<p>유효하지 않은 회원.</p>";
+    exit;
 }
 
-// DB 연결
-$conn = new mysqli($servername, $username, $password, $dbname);
-if ($conn->connect_error) {
-    die("DB 연결 실패: " . $conn->connect_error);
-}
-
-// 유저 정보 가져오기
-$sql = "SELECT * FROM users WHERE id = $user_id";
-$result = $conn->query($sql);
-if(!$result || $result->num_rows === 0) {
-  echo "<p>존재하지 않는 회원입니다.</p>";
-  $conn->close();
-  exit;
-}
+// 유저 정보 조회 (예시)
+$stmt = $conn->prepare("SELECT mb_id, mb_name, mb_email, mb_tel FROM users WHERE id = ?");
+$stmt->bind_param("i", $userId);
+$stmt->execute();
+$result = $stmt->get_result();
 $user = $result->fetch_assoc();
-$conn->close();
+$stmt->close();
 
-// HTML 출력
+if (!$user) {
+    echo "<p>존재하지 않는 회원.</p>";
+    exit;
+}
 ?>
-<div>
-  <p><label>아이디: </label> <?php echo htmlspecialchars($user['mb_id']); ?></p>
-  <p><label>이름: </label> <?php echo htmlspecialchars($user['mb_name']); ?></p>
-  <p><label>이메일: </label> <?php echo htmlspecialchars($user['mb_email']); ?></p>
-  <p><label>전화번호: </label> <?php echo htmlspecialchars($user['mb_tel']); ?></p>
-  <p><label>가입일: </label> <?php echo htmlspecialchars($user['created_at']); ?></p>
-  <p><label>승인여부: </label> <?php echo $user['approved'] ? '승인됨' : '미승인'; ?></p>
-  <!-- 필요하다면 코인 보유량, 주소, 기타 정보도 추가 -->
 
-  <hr>
-  <!-- 비밀번호 초기화 버튼 -->
-  <button class="btn btn-warning btn-sm" onclick="resetPassword(<?php echo $user_id; ?>)">비밀번호 초기화</button>
-  <!-- 수정 버튼 -->
-  <button class="btn btn-info btn-sm" onclick="editUser(<?php echo $user_id; ?>)">회원 정보 수정</button>
+<!-- === 상세정보 UI === -->
+<div>
+  <h4>회원상세: <?=htmlspecialchars($user['mb_name'])?> (ID: <?=htmlspecialchars($user['mb_id'])?>)</h4>
+  <ul>
+    <li>이메일: <?=htmlspecialchars($user['mb_email'])?></li>
+    <li>전화번호: <?=htmlspecialchars($user['mb_tel'])?></li>
+  </ul>
+</div>
+
+<!-- 하단 모달 footer 대신: 여기서 코인입금 버튼 배치 -->
+<div class="mt-3 text-right">
+  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#depositModal">
+    코인 입금
+  </button>
+  <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+</div>
+
+<!-- ========== (두 번째) 입금 모달 ========== -->
+<div class="modal fade" id="depositModal" tabindex="-1" role="dialog" 
+     aria-labelledby="depositModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">코인 입금</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span>&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <!-- 입금수량 입력 -->
+        <div class="form-group">
+          <label for="depositAmount">입금 수량</label>
+          <input type="number" class="form-control" id="depositAmount" step="0.00000001" placeholder="0.00000000" />
+        </div>
+        <!-- 회원 id를 숨김으로 보관 -->
+        <input type="hidden" id="depositUserId" value="<?=$userId?>">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
+        <button type="button" class="btn btn-success" onclick="doDeposit()">확인</button>
+      </div>
+    </div>
+  </div>
 </div>
 
 <script>
-// 비밀번호 초기화
-function resetPassword(userId) {
-  if(!confirm('정말 비밀번호를 초기화하시겠습니까?')) return;
-  
-  $.ajax({
-    url: '/master/manage_user/reset_password.php',
-    method: 'POST',
-    data: { user_id: userId },
-    dataType: 'json',
-    success: function(res) {
-      if(res.success) {
-        alert('비밀번호가 초기화되었습니다.');
-      } else {
-        alert('실패: ' + res.message);
-      }
-    },
-    error: function(err) {
-      console.error(err);
-      alert('비밀번호 초기화 중 오류가 발생했습니다.');
-    }
-  });
-}
+function doDeposit() {
+  const userId = document.getElementById('depositUserId').value;
+  const amount = parseFloat(document.getElementById('depositAmount').value);
+  if (!amount || amount <= 0) {
+    alert('입금 수량을 올바르게 입력하세요.');
+    return;
+  }
 
-// 회원 정보 수정
-function editUser(userId) {
-  // 수정 폼으로 이동하거나, 추가 모달을 띄우는 등
-  window.open('/master/manage_user/user_edit.php?user_id=' + userId,
-    'editUser',
-    'width=600,height=600,resizable=yes,scrollbars=yes'
-  );
+  // AJAX POST -> /master/wallet/manual_deposit.php (예시)
+  fetch('/master/wallet/manual_deposit.php', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ user_id: userId, amount: amount })
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (data.success) {
+      alert('입금 완료: ' + data.message);
+      // 모달 닫기
+      $('#depositModal').modal('hide');
+      // 필요하다면, 상세 모달 전체도 닫거나, 목록 리프레시
+      // $('#userDetailModal').modal('hide');
+      // loadUserList(1);
+    } else {
+      alert('입금 실패: ' + data.message);
+    }
+  })
+  .catch(err => {
+    console.error(err);
+    alert('입금 처리 중 오류 발생');
+  });
 }
 </script>
