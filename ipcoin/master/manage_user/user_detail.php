@@ -1,66 +1,111 @@
 <?php
-require_once dirname(__DIR__) . '/../config.php';
-
-header('Content-Type: application/json');
-
-try {
-    $data = json_decode(file_get_contents("php://input"), true);
-
-    $userId = intval($data['user_id']);
-    $coinName = trim($data['coin_name']);
-    $amount = floatval($data['amount']);
-    $depositAddress = trim($data['deposit_address']);
-
-    if (!$userId || !$coinName || !$amount || !$depositAddress) {
-        throw new Exception("모든 필드를 올바르게 입력해주세요.");
-    }
-
-    // wallet 테이블에서 사용자 검증
-    $stmt = $conn->prepare("SELECT id FROM wallet WHERE user_id = ? AND wallet_address = ?");
-    $stmt->bind_param("is", $userId, $depositAddress);
-    $stmt->execute();
-    $walletRes = $stmt->get_result();
-
-    if ($walletRes->num_rows === 0) {
-        throw new Exception("지갑 주소가 일치하지 않습니다.");
-    }
-
-    $stmt->close();
-
-    // coin 테이블 업데이트
-    $stmt = $conn->prepare("
-        INSERT INTO coin (user_id, name, total_amount, locked_amount)
-        VALUES (?, ?, ?, ?)
-        ON DUPLICATE KEY UPDATE 
-            total_amount = total_amount + VALUES(total_amount),
-            locked_amount = locked_amount + VALUES(locked_amount)
-    ");
-    $stmt->bind_param("isdd", $userId, $coinName, $amount, $amount);
-    $stmt->execute();
-    $stmt->close();
-
-    // wallet 테이블 업데이트
-    $stmt = $conn->prepare("
-        UPDATE wallet 
-        SET total_balance = total_balance + ?, locked_balance = locked_balance + ?
-        WHERE user_id = ?
-    ");
-    $stmt->bind_param("ddi", $amount, $amount, $userId);
-    $stmt->execute();
-    $stmt->close();
-
-    // deposit_requests 기록 추가 (옵션)
-    $stmt = $conn->prepare("
-        INSERT INTO deposit_requests (user_id, coin_name, amount, deposit_address, status)
-        VALUES (?, ?, ?, ?, 'approved')
-    ");
-    $stmt->bind_param("isds", $userId, $coinName, $amount, $depositAddress);
-    $stmt->execute();
-    $stmt->close();
-
-    echo json_encode(['success' => true, 'message' => '입금이 성공적으로 처리되었습니다.']);
-} catch (Exception $e) {
-    echo json_encode(['success' => false, 'message' => $e->getMessage()]);
-} finally {
-    $conn->close();
+// user_detail.php
+require_once dirname(__DIR__, 2) . '/config.php';  // 상위 2단계면 조정
+$userId = isset($_GET['user_id']) ? intval($_GET['user_id']) : 0;
+if (!$userId) {
+  echo "<p>유효하지 않은 회원.</p>";
+  exit;
 }
+
+// 1) 유저 정보
+$stmt = $conn->prepare("
+    SELECT mb_id, mb_name, mb_email, mb_tel
+      FROM users
+     WHERE id = ?
+");
+$stmt->bind_param("i", $userId);
+$stmt->execute();
+$result = $stmt->get_result();
+$user = $result->fetch_assoc();
+$stmt->close();
+
+if (!$user) {
+  echo "<p>존재하지 않는 회원.</p>";
+  exit;
+}
+?>
+
+<!-- 상세정보 표시 -->
+<div>
+  <h4>회원 상세: <?=htmlspecialchars($user['mb_name'])?> 
+    (ID: <?=htmlspecialchars($user['mb_id'])?>)</h4>
+  <ul>
+    <li>이메일: <?=htmlspecialchars($user['mb_email'])?></li>
+    <li>전화번호: <?=htmlspecialchars($user['mb_tel'])?></li>
+  </ul>
+</div>
+
+<!-- 하단: 코인입금 버튼 / 닫기 -->
+<div class="mt-3 text-right">
+  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#depositModal">
+    코인 입금
+  </button>
+  <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+</div>
+
+<!-- ========== (두 번째) 입금 모달 ========== -->
+<div class="modal fade" id="depositModal" tabindex="-1" role="dialog" 
+     aria-labelledby="depositModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">코인 입금</h5>
+        <button type="button" class="close" data-dismiss="modal">
+          <span>&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <!-- 입금수량 입력 -->
+        <div class="form-group">
+          <label for="depositAmount">입금 수량</label>
+          <input type="number" class="form-control" id="depositAmount"
+                 step="0.00000001" placeholder="0.00000000" />
+        </div>
+        <!-- 회원 id 숨겨서 저장 -->
+        <input type="hidden" id="depositUserId" value="<?=$userId?>">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
+        <button type="button" class="btn btn-success" onclick="doDeposit()">확인</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// === (2차 모달) 입금 처리 ===
+function doDeposit() {
+  const userId = document.getElementById('depositUserId').value;
+  const amount = parseFloat(document.getElementById('depositAmount').value);
+  if (!amount || amount <= 0) {
+    alert('입금 수량을 올바르게 입력하세요.');
+    return;
+  }
+
+  // AJAX POST -> /master/wallet/manual_deposit.php
+  fetch('/master/wallet/manual_deposit.php', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ user_id: userId, amount: amount })
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (data.success) {
+      alert('입금 완료: ' + data.message);
+      // 모달 닫기
+      $('#depositModal').modal('hide');
+      // 상세 모달도 닫고 싶다면 주석 해제:
+      // $('#userDetailModal').modal('hide');
+      // 그리고 목록 새로고침 원하면:
+      // parent.loadUserList(1); 
+      // (단, parent 함수 접근 가능 여부는 구조에 따라 다름)
+    } else {
+      alert('입금 실패: ' + data.message);
+    }
+  })
+  .catch(err => {
+    console.error(err);
+    alert('입금 처리 중 오류가 발생했습니다.');
+  });
+}
+</script>
