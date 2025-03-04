@@ -5,11 +5,9 @@ require_once dirname(__DIR__) . '/../config.php';       // DB 연결
 require_once dirname(__DIR__) . '/frames/top_nav.php';  // 상단 네비게이션
 require_once dirname(__DIR__) . '/frames/nav.php';      // 좌측 사이드바 등
 
-// DB 연결 (이미 config에서 했으면 중복 안 해도 되지만, 필요하다면 아래 유지)
-$conn = new mysqli($servername, $username, $password, $dbname);
-if ($conn->connect_error) {
-    die("DB 연결 실패: " . $conn->connect_error);
-}
+// DB 연결은 config.php에서 이미 했다고 가정
+// $conn = new mysqli(...)  <-- 중복으로 하지 말기
+
 ?>
 <!DOCTYPE html>
 <html lang="ko">
@@ -200,7 +198,7 @@ function renderUserTable(users, startIndex) {
     let no = startIndex + i;
     let approved = parseInt(user.approved) === 1;
     let statusHtml = approved ? '<span style="color:black;">승인</span>'
-                              : `<button class="btn-approve">승인</button>`;
+                              : `<button class="btn-approve" data-uid="${user.id}">승인</button>`;
     let createdDate = (user.created_at || '').substring(0,10);
 
     let rowHtml = `
@@ -244,7 +242,7 @@ function renderPagination(totalPages, currentPage) {
 function openDetailModal(userId) {
   $('#userDetailContent').html('로딩중...');
   $.ajax({
-    url: 'user_detail.php', // 같은 디렉토리라 가정
+    url: '/master/manage_user/user_detail.php',
     method: 'GET',
     data: { user_id: userId },
     dataType: 'html',
@@ -262,4 +260,3 @@ function openDetailModal(userId) {
 
 </body>
 </html>
-<?php $conn->close(); ?>
