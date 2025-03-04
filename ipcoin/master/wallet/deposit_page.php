@@ -19,7 +19,135 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     header("Location: deposit_manage.php");
     exit;
 }
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    header('Content-Type: application/json');
+    try {
+        // JSON 데이터 파싱
+        $input = json_decode(file_get_contents('php://input'), true);
+        $userId = isset($input['user_id']) ? intval($input['user_id']) : 0;
+        $amount = isset($input['amount']) ? floatval($input['amount']) : 0;
+
+        if ($userId <= 0 || $amount <= 0) {
+            throw new Exception("유효하지 않은 파라미터");
+        }
+
+        // 예: coin 테이블 / wallet 테이블 / deposit_requests 테이블 등 업데이트
+        $conn->begin_transaction();
+
+        // 1) coin 테이블에서 해당 유저의 'IP' 코인 찾기 (없으면 생성)
+        $sqlCoin = "SELECT id, total_amount FROM coin WHERE user_id = ? AND name = 'IP'";
+        $stmt = $conn->prepare($sqlCoin);
+        $stmt->bind_param("i", $userId);
+        $stmt->execute();
+        $res = $stmt->get_result();
+
+        if ($res->num_rows === 0) {
+            // 코인이 없으면 생성
+            $insertCoin = $conn->prepare("
+                INSERT INTO coin (user_id, name, total_amount, locked_amount)
+                VALUES (?, 'IP', 0, 0)
+            ");
+            $insertCoin->bind_param("i", $userId);
+            $insertCoin->execute();
+            $coinId = $insertCoin->insert_id;
+            $insertCoin->close();
+        } else {
+            $coinRow = $res->fetch_assoc();
+            $coinId = $coinRow['id'];
+        }
+        $stmt->close();
+
+        // 2) deposit_requests 테이블 기록(원한다면)
+        $insertDep = $conn->prepare("
+            INSERT INTO deposit_requests (user_id, coin_name, amount, deposit_address, status)
+            VALUES (?, 'IP', ?, 'manual', 'approved')
+        ");
+        $insertDep->bind_param("id", $userId, $amount);
+        $insertDep->execute();
+        $insertDep->close();
+
+        // 3) coin 테이블에 수량 추가 (total_amount += $amount)
+        $updCoin = $conn->prepare("
+            UPDATE coin
+            SET total_amount = total_amount + ?
+            WHERE id = ?
+        ");
+        $updCoin->bind_param("di", $amount, $coinId);
+        $updCoin->execute();
+        $updCoin->close();
+
+        // 4) wallet 테이블도 있다면 업데이트 (total_balance += $amount)
+        $updWallet = $conn->prepare("
+            UPDATE wallet
+            SET total_balance = total_balance + ?
+            WHERE user_id = ?
+        ");
+        $updWallet->bind_param("di", $amount, $userId);
+        $updWallet->execute();
+        $updWallet->close();
+
+        $conn->commit();
+
+        echo json_encode([
+            'success' => true,
+            'message' => "코인 {$amount}개가 수동 입금되었습니다."
+        ]);
+    } catch (Exception $e) {
+        $conn->rollback();
+        echo json_encode([
+            'success' => false,
+            'message' => $e->getMessage()
+        ]);
+    } finally {
+        $conn->close();
+    }
+    exit; // POST 요청 처리 끝 (아래 HTML 출력 X)
+}
+
+// ===== [B] AJAX GET ?action=search => 회원 검색 결과 JSON 반환 =====
+if (isset($_GET['action']) && $_GET['action'] === 'search') {
+    header('Content-Type: application/json');
+    $query = isset($_GET['query']) ? trim($_GET['query']) : '';
+    if (!$query) {
+        echo json_encode(['success' => false, 'message' => '검색어가 없습니다.']);
+        exit;
+    }
+
+    // users 테이블 + coin 잔고 조회(예: 'IP' 코인만)
+    $like = "%{$query}%";
+    $sql = "
+        SELECT u.id AS user_id,
+               u.mb_name,
+               u.mb_id,
+               IFNULL(c.total_amount, 0) AS coin_balance
+          FROM users u
+          LEFT JOIN coin c
+            ON u.id = c.user_id
+           AND c.name = 'IP'
+         WHERE u.mb_name LIKE ? OR u.mb_id LIKE ?
+         ORDER BY u.id DESC
+         LIMIT 50
+    ";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("ss", $like, $like);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    $users = [];
+    while ($row = $result->fetch_assoc()) {
+        // row: [user_id, mb_name, mb_id, coin_balance]
+        $users[] = $row;
+    }
+    $stmt->close();
+    $conn->close();
+
+    echo json_encode(['success' => true, 'users' => $users]);
+    exit;
+}
+
 ?>
+
+
 
 <style>
     /* 검색바 스타일 (예시) */

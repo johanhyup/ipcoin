@@ -1,7 +1,11 @@
 <?php
 session_start();
-require_once dirname(__DIR__) . '/../config.php';
-// DB 연결 예시
+require_once dirname(__DIR__) . '/frames/header.php';  // (필요하다면)
+require_once dirname(__DIR__) . '/../config.php';       // DB 연결
+require_once dirname(__DIR__) . '/frames/top_nav.php';  // 상단 네비게이션
+require_once dirname(__DIR__) . '/frames/nav.php';      // 좌측 사이드바 등
+
+// DB 연결 (이미 config에서 했으면 중복 안 해도 되지만, 필요하다면 아래 유지)
 $conn = new mysqli($servername, $username, $password, $dbname);
 if ($conn->connect_error) {
     die("DB 연결 실패: " . $conn->connect_error);
@@ -60,13 +64,14 @@ if ($conn->connect_error) {
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
 <div class="wrapper">
-  <!-- (선택) 상단바, 사이드바 등 필요하다면 include -->
-  
+
+  <!-- 이미 include 한 top_nav, nav 내용이 적용되었다고 가정 -->
+
   <div class="content-wrapper">
     <section class="content pt-3">
       <div class="container-fluid">
         
-        <!-- 1) 검색바 -->
+        <!-- [1] 검색바 -->
         <div class="search-bar">
           <select id="sortType" class="form-control" style="width:auto;">
             <option value="recent">최근 가입순</option>
@@ -82,7 +87,7 @@ if ($conn->connect_error) {
           <button id="searchBtn" class="btn btn-primary">검색</button>
         </div>
 
-        <!-- 2) 회원 목록 테이블 -->
+        <!-- [2] 회원 목록 테이블 -->
         <div class="table-responsive">
           <table class="table table-bordered table-hover" id="userTable">
             <thead>
@@ -98,7 +103,7 @@ if ($conn->connect_error) {
                 <th>상세정보</th>
               </tr>
             </thead>
-            <tbody><!-- AJAX 결과 --></tbody>
+            <tbody><!-- AJAX로 불러온 내용이 들어갈 예정 --></tbody>
           </table>
         </div>
 
@@ -107,7 +112,7 @@ if ($conn->connect_error) {
     </section>
   </div><!-- /.content-wrapper -->
 
-  <!-- ============ 회원 상세정보 모달 ============ -->
+  <!-- ============ [3] 회원 상세정보 모달 ============ -->
   <div class="modal fade" id="userDetailModal" tabindex="-1" role="dialog"
        aria-labelledby="userDetailModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
@@ -120,34 +125,37 @@ if ($conn->connect_error) {
           </button>
         </div>
         <div class="modal-body" id="userDetailContent">
-          <!-- user_detail.php 내용이 여기로 삽입됨 -->
+          <!-- user_detail.php 내용이 여기로 삽입됨 (회원 상세 + 코인입금 버튼/팝업) -->
         </div>
       </div>
     </div>
   </div>
 
   <!-- (선택) footer -->
+  <?php require_once dirname(__DIR__) . '/../master/frames/footer.php'; ?>
 </div><!-- /.wrapper -->
 
+
 <script>
-// ----------------------------------------------
-// 1. 페이지 로딩 시 / 검색 버튼 클릭 시 -> 회원 목록 불러오기
-// ----------------------------------------------
 $(document).ready(function() {
+  // 검색 버튼 클릭
   $('#searchBtn').on('click', function() {
     loadUserList(1);
   });
+  // 셀렉트박스 변경 시에도 재로딩
   $('#sortType, #rowsPerPage').on('change', function() {
     loadUserList(1);
   });
+  // 엔터키 검색
   $('#searchInput').on('keyup', function(e) {
     if(e.key === 'Enter') loadUserList(1);
   });
 
-  // 초기 로드
+  // 페이지 최초 로드
   loadUserList(1);
 });
 
+// [A] 회원 목록 불러오기
 function loadUserList(page) {
   let sortType = $('#sortType').val();
   let rowsPerPage = $('#rowsPerPage').val();
@@ -178,6 +186,7 @@ function loadUserList(page) {
   });
 }
 
+// [B] 테이블 렌더링
 function renderUserTable(users, startIndex) {
   let tbody = $('#userTable tbody');
   tbody.empty();
@@ -213,6 +222,7 @@ function renderUserTable(users, startIndex) {
   });
 }
 
+// [C] 페이지네이션
 function renderPagination(totalPages, currentPage) {
   let pagDiv = $('#pagination');
   pagDiv.empty();
@@ -229,14 +239,12 @@ function renderPagination(totalPages, currentPage) {
 }
 
 // ----------------------------------------------
-// 2. 상세 모달 열기 -> user_detail.php 로 AJAX
+// [D] 상세 모달 열기 -> user_detail.php 로 AJAX
 // ----------------------------------------------
 function openDetailModal(userId) {
-  // 모달 내용 초기화
   $('#userDetailContent').html('로딩중...');
-
   $.ajax({
-    url: 'user_detail.php', // 현재 파일과 같은 디렉토리에 있다고 가정
+    url: 'user_detail.php', // 같은 디렉토리라 가정
     method: 'GET',
     data: { user_id: userId },
     dataType: 'html',
@@ -254,5 +262,4 @@ function openDetailModal(userId) {
 
 </body>
 </html>
-
 <?php $conn->close(); ?>
