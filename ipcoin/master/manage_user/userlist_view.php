@@ -214,7 +214,7 @@ function renderUserTable(users, startIndex) {
         <td>${user.coin_balance || 0}</td>
         <td>${statusHtml}</td>
         <td>
-          <button class="btn-detail" onclick="openDetailModal(${user.user_id})">상세</button>
+          <button class="btn-detail" onclick="openDetailModal(${user.mb_name})">상세</button>
         </td>
       </tr>
     `;
