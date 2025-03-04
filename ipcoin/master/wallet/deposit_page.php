@@ -576,7 +576,7 @@ if (isset($_GET['action']) && $_GET['action'] === 'search') {
                 <td>${user.coin_balance || 0}</td>
                 <td>${statusHtml}</td>
                 <td>
-                    <button class="edit-button" data-user-id="${user.user_id}">입금</button>
+                    <button class="edit-button" data-user-id="${user.id}">입금</button>
                 </td>
             </tr>
             `;
