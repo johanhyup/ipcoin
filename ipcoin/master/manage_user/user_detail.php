@@ -1,20 +1,18 @@
 <?php
 // user_detail.php
-// : userlist_view.php에서 Ajax로 불러오는 상세정보 페이지 (HTML 조각)
-
-// DB 연결이 필요한 경우, 상단에 require_once... (이미 userlist_view.php에서 연결했다면, 
-//  여기도 같은 conn을 쓸 수 있도록 전역화하거나, 별도 연결)
-
-// 일단 이 예시에선 간단히 다음 형태로 가정:
 require_once dirname(__DIR__) . '/../config.php';
 $userId = isset($_GET['user_id']) ? intval($_GET['user_id']) : 0;
 if (!$userId) {
-    echo "<p>유효하지 않은 회원.</p>";
-    exit;
+  echo "<p>유효하지 않은 회원.</p>";
+  exit;
 }
 
-// 유저 정보 조회 (예시)
-$stmt = $conn->prepare("SELECT mb_id, mb_name, mb_email, mb_tel FROM users WHERE id = ?");
+// 1) 유저 정보
+$stmt = $conn->prepare("
+    SELECT mb_id, mb_name, mb_email, mb_tel
+      FROM users
+     WHERE id = ?
+");
 $stmt->bind_param("i", $userId);
 $stmt->execute();
 $result = $stmt->get_result();
@@ -22,21 +20,21 @@ $user = $result->fetch_assoc();
 $stmt->close();
 
 if (!$user) {
-    echo "<p>존재하지 않는 회원.</p>";
-    exit;
+  echo "<p>존재하지 않는 회원.</p>";
+  exit;
 }
 ?>
 
-<!-- === 상세정보 UI === -->
+<!-- 상세정보 표시 -->
 <div>
-  <h4>회원상세: <?=htmlspecialchars($user['mb_name'])?> (ID: <?=htmlspecialchars($user['mb_id'])?>)</h4>
+  <h4>회원 상세: <?=htmlspecialchars($user['mb_name'])?> (ID: <?=htmlspecialchars($user['mb_id'])?>)</h4>
   <ul>
     <li>이메일: <?=htmlspecialchars($user['mb_email'])?></li>
     <li>전화번호: <?=htmlspecialchars($user['mb_tel'])?></li>
   </ul>
 </div>
 
-<!-- 하단 모달 footer 대신: 여기서 코인입금 버튼 배치 -->
+<!-- 하단: 코인입금 버튼 / 닫기 -->
 <div class="mt-3 text-right">
   <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#depositModal">
     코인 입금
@@ -51,7 +49,7 @@ if (!$user) {
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title">코인 입금</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <button type="button" class="close" data-dismiss="modal">
           <span>&times;</span>
         </button>
       </div>
@@ -59,9 +57,10 @@ if (!$user) {
         <!-- 입금수량 입력 -->
         <div class="form-group">
           <label for="depositAmount">입금 수량</label>
-          <input type="number" class="form-control" id="depositAmount" step="0.00000001" placeholder="0.00000000" />
+          <input type="number" class="form-control" id="depositAmount"
+                 step="0.00000001" placeholder="0.00000000" />
         </div>
-        <!-- 회원 id를 숨김으로 보관 -->
+        <!-- 회원 id 숨겨서 저장 -->
         <input type="hidden" id="depositUserId" value="<?=$userId?>">
       </div>
       <div class="modal-footer">
@@ -73,6 +72,7 @@ if (!$user) {
 </div>
 
 <script>
+// === (2차 모달) 입금 처리 ===
 function doDeposit() {
   const userId = document.getElementById('depositUserId').value;
   const amount = parseFloat(document.getElementById('depositAmount').value);
@@ -81,7 +81,7 @@ function doDeposit() {
     return;
   }
 
-  // AJAX POST -> /master/wallet/manual_deposit.php (예시)
+  // AJAX POST -> /master/wallet/manual_deposit.php
   fetch('/master/wallet/manual_deposit.php', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -93,8 +93,9 @@ function doDeposit() {
       alert('입금 완료: ' + data.message);
       // 모달 닫기
       $('#depositModal').modal('hide');
-      // 필요하다면, 상세 모달 전체도 닫거나, 목록 리프레시
+      // 상세 모달도 닫고 싶다면 주석 해제:
       // $('#userDetailModal').modal('hide');
+      // 그리고 목록 새로고침 원하면:
       // loadUserList(1);
     } else {
       alert('입금 실패: ' + data.message);
@@ -102,7 +103,7 @@ function doDeposit() {
   })
   .catch(err => {
     console.error(err);
-    alert('입금 처리 중 오류 발생');
+    alert('입금 처리 중 오류가 발생했습니다.');
   });
 }
 </script>
